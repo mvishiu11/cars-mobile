@@ -9,7 +9,7 @@ export default function WelcomeScreen() {
     <ImageBackground
       source={require('../assets/images/background.png')}
       style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-      imageStyle={{ opacity: 0.7 }} // Blue tint via opacity
+      imageStyle={{ opacity: 0.7 }}
     >
       {/* Logo Section */}
       <View
