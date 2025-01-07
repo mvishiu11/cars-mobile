@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, Image, FlatList, Pressable } from 'react-native'
+import SafeLayout from '../components/SafeLayout'
 
 // Example data
 const exampleData = {
@@ -13,21 +14,7 @@ const exampleData = {
       returnDate: 'December 7th, 2024 | 18:45',
     },
     {
-        id: 2,
-        name: 'Car Name',
-        image: null,
-        pickupDate: 'November 30th, 2024 | 10:00',
-        returnDate: 'December 7th, 2024 | 18:45',
-      },
-      {
-        id: 3,
-        name: 'Car Name',
-        image: null,
-        pickupDate: 'November 30th, 2024 | 10:00',
-        returnDate: 'December 7th, 2024 | 18:45',
-      },
-    {
-      id: 4,
+      id: 2,
       name: 'Car Name',
       image: null,
       pickupDate: 'November 30th, 2024 | 10:00',
@@ -38,7 +25,7 @@ const exampleData = {
     {
       id: 1,
       name: 'Flat Data',
-      image: null,
+      image: null, // No image provided
       checkInDate: 'November 30th, 2024 | 10:00',
       checkOutDate: 'December 7th, 2024 | 18:45',
     },
@@ -120,23 +107,7 @@ export default function Dashboard() {
   )
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: '#ffffff',
-        padding: 16,
-      }}
-    >
-      {/* Logo */}
-      <View style={{ alignItems: 'center', marginBottom: 24 }}>
-        <Image
-          source={require('../assets/images/logo.png')}
-          style={{ width: 120, height: 50 }}
-          resizeMode="contain"
-        />
-      </View>
-
-      {/* Welcome Message */}
+    <SafeLayout>
       <Text
         style={{
           fontSize: 24,
@@ -187,6 +158,6 @@ export default function Dashboard() {
           Browse cars
         </Text>
       </Pressable>
-    </View>
+    </SafeLayout>
   )
 }

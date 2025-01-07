@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router'
 import { DripsyProvider } from 'dripsy'
+import { UserProvider } from '../context/UserContext'
 
 const theme = {
   colors: {
@@ -14,8 +15,10 @@ const theme = {
 
 export default function Layout() {
   return (
-    <DripsyProvider theme={theme}>
-      <Stack />
-    </DripsyProvider>
+    <UserProvider>
+      <DripsyProvider theme={theme}>
+        <Stack />
+      </DripsyProvider>
+    </UserProvider>
   )
 }
