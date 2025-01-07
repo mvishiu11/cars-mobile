@@ -22,7 +22,7 @@ export default function Layout() {
           <Stack.Screen name="login-register" options={{ title: 'Login & Register' }} />
           <Stack.Screen name="dashboard" options={{ title: 'Dashboard' }} />
           <Stack.Screen name="car-browser" options={{ title: 'Browse Cars' }} />
-          <Stack.Screen name="not-found" options={{ title: 'Not Found' }} />
+          <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
         </Stack>
       </DripsyProvider>
     </UserProvider>

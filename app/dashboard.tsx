@@ -2,36 +2,7 @@ import React from 'react'
 import { View, Text, Image, FlatList, Pressable } from 'react-native'
 import SafeLayout from '../components/SafeLayout'
 import { useRouter } from 'expo-router'
-
-// Example data
-const exampleData = {
-  username: 'JohnDoe',
-  cars: [
-    {
-      id: 1,
-      name: 'Car Name',
-      image: null,
-      pickupDate: 'November 30th, 2024 | 10:00',
-      returnDate: 'December 7th, 2024 | 18:45',
-    },
-    {
-      id: 2,
-      name: 'Car Name',
-      image: null,
-      pickupDate: 'November 30th, 2024 | 10:00',
-      returnDate: 'December 7th, 2024 | 18:45',
-    },
-  ],
-  flats: [
-    {
-      id: 1,
-      name: 'Flat Data',
-      image: null,
-      checkInDate: 'November 30th, 2024 | 10:00',
-      checkOutDate: 'December 7th, 2024 | 18:45',
-    },
-  ],
-}
+import { exampleData } from '@/data/data'
 
 export default function Dashboard() {
   const router = useRouter()
