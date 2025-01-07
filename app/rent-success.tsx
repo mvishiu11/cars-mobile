@@ -17,25 +17,29 @@ export default function RentSuccess() {
   const flatFallbackImage = require('../assets/images/flat-fallback.png')
 
   const renderFlatItem = ({ item }: any) => (
-    <View style={styles.flatCard}>
-      <Image
-        source={item.image ? { uri: item.image } : flatFallbackImage}
-        style={styles.flatImage}
-        resizeMode="cover"
-      />
-      <View style={styles.flatDetails}>
-        <Text style={styles.flatName}>{item.name}</Text>
-        <Text style={styles.flatInfo}>
-          <FontAwesome5 name="map-marker-alt" size={12} color="#666" /> {item.location} • {item.distance}
-        </Text>
-        <Text style={styles.flatInfo}>
-          <FontAwesome5 name="home" size={12} color="#666" /> {item.size}
-        </Text>
+    <Pressable
+              onPress={() => router.push(`/flat-details/${item.id}`)}
+    >
+      <View style={styles.flatCard}>
+        <Image
+          source={item.image ? { uri: item.image } : flatFallbackImage}
+          style={styles.flatImage}
+          resizeMode="cover"
+        />
+        <View style={styles.flatDetails}>
+          <Text style={styles.flatName}>{item.name}</Text>
+          <Text style={styles.flatInfo}>
+            <FontAwesome5 name="map-marker-alt" size={12} color="#666" /> {item.location} • {item.distance}
+          </Text>
+          <Text style={styles.flatInfo}>
+            <FontAwesome5 name="home" size={12} color="#666" /> {item.size}
+          </Text>
+        </View>
+        <View style={styles.flatPrice}>
+          <Text style={styles.flatPriceText}>{item.price} zł / day</Text>
+        </View>
       </View>
-      <View style={styles.flatPrice}>
-        <Text style={styles.flatPriceText}>{item.price} zł / day</Text>
-      </View>
-    </View>
+    </Pressable>
   )
 
   return (

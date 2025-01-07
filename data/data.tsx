@@ -17,7 +17,19 @@ export const exampleData = {
         returnDate: 'December 7th, 2024 | 18:45',
       }
     ],
-    rentedFlats: [],
+    rentedFlats: [
+      {
+        id: 1,
+        name: 'My Flat',
+        location: 'Warsaw',
+        distance: '2.5 km',
+        size: '40 m²',
+        price: 700,
+        startDate: 'November 30th, 2024',
+        endDate: 'December 7th, 2024',
+        image: null,
+      },
+    ],
     cars: [
       {
         id: 1,
