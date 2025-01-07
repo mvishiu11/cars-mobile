@@ -35,7 +35,7 @@ export default function Sidebar({ visible, onClose }: { visible: boolean; onClos
               router.push('/dashboard')
             }}
           >
-            <FontAwesome5 name="dashboard" size={18} color="#003366" />
+            <FontAwesome5 name="home" size={18} color="#003366" />
             <Text style={styles.navText}>Dashboard</Text>
           </Pressable>
 

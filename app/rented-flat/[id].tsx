@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import SafeLayout from '../../components/SafeLayout'
 import Toast from 'react-native-toast-message'
 import { exampleData } from '@/data/data'
+import { FontAwesome5 } from '@expo/vector-icons'
 
 export default function RentedFlat() {
   const { id } = useLocalSearchParams()
@@ -19,18 +20,15 @@ export default function RentedFlat() {
   }
 
   const handleCancel = () => {
-    // Remove the flat from rentedFlats and add it back to flats
     exampleData.rentedFlats = exampleData.rentedFlats.filter((f) => f.id !== flat.id)
     exampleData.flats.push(flat)
 
-    // Show toast notification
     Toast.show({
       type: 'info',
       text1: 'Rental Canceled',
       text2: `${flat.name} has been removed from your rented flats.`,
     })
 
-    // Navigate back to the dashboard
     router.push('/dashboard')
   }
 
@@ -56,10 +54,16 @@ export default function RentedFlat() {
         <Text style={styles.flatPrice}>{flat.price} zł / day</Text>
 
         <View style={styles.flatDetails}>
-          <Text>🛏️ 3 Bedrooms</Text>
-          <Text>🛁 2 Bathrooms</Text>
+          <Text>
+            <FontAwesome5 name="bed" size={16} color="#003366" /> 3 Bedrooms
+          </Text>
+          <Text>
+            <FontAwesome5 name="bath" size={16} color="#003366" /> 2 Bathrooms
+          </Text>
           <Pressable onPress={openGoogleMaps} style={styles.googleMapsLink}>
-            <Text style={styles.googleMapsText}>📍 Google Maps</Text>
+            <Text style={styles.googleMapsText}>
+                <FontAwesome5 name="map-marker-alt" size={16} color="#003366" />{' '} Google Maps
+            </Text>
           </Pressable>
         </View>
 

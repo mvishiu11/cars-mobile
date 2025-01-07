@@ -5,6 +5,7 @@ import SafeLayout from '../../components/SafeLayout'
 import QRCode from 'react-native-qrcode-svg'
 import { exampleData } from '@/data/data'
 import Toast from 'react-native-toast-message'
+import { FontAwesome5 } from '@expo/vector-icons'
 
 export default function RentedCar() {
   const { id } = useLocalSearchParams()
@@ -51,13 +52,26 @@ export default function RentedCar() {
         {/* Car Details */}
         <Text style={styles.carName}>{car.name}</Text>
         <View style={styles.carDetails}>
-          <Text>📍 {car.location} • {car.distance}</Text>
-          <Text>📅 {car.year}</Text>
-          <Text>🚗 {car.seats} Seats</Text>
-          <Text>🚪 {car.doors} Doors</Text>
-          <Text>⛽ {car.fuel}</Text>
-          <Text>📦 {car.capacity}</Text>
+          <Text>
+            <FontAwesome5 name="map-marker-alt" /> {car.location} • {car.distance}
+          </Text>
+          <Text>
+            <FontAwesome5 name="users" size={14} color="#003366" /> {car.seats} Seats
+          </Text>
+          <Text>
+            <FontAwesome5 name="gas-pump" size={14} color="#003366" /> {car.fuel}
+          </Text>
+          <Text>
+            <FontAwesome5 name="calendar" size={14} color="#003366" /> {car.year}
+          </Text>
+          <Text>
+            <FontAwesome5 name="door-open" size={14} color="#003366" /> {car.doors} Doors
+          </Text>
+          <Text>
+            <FontAwesome5 name="box" size={14} color="#003366" /> {car.capacity}
+          </Text>
         </View>
+
 
         {/* Rental Period */}
         <Text style={styles.sectionHeader}>Rental Period</Text>

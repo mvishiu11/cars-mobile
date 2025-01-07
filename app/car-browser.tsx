@@ -3,6 +3,7 @@ import { View, Text, FlatList, Image, Pressable, StyleSheet } from 'react-native
 import { useRouter } from 'expo-router'
 import SafeLayout from '../components/SafeLayout'
 import { exampleData } from '@/data/data'
+import { FontAwesome5 } from '@expo/vector-icons'
 
 export default function CarBrowser() {
   const router = useRouter()
@@ -21,12 +22,15 @@ export default function CarBrowser() {
       <View style={styles.carDetails}>
         <Text style={styles.carName}>{item.name}</Text>
         <Text style={styles.carInfo}>
-          📍 {item.location} • {item.distance}
+          <FontAwesome5 name="map-marker-alt" /> {item.location} • {item.distance}
         </Text>
-        <Text style={styles.carInfo}>🚗 {item.seats} Seats</Text>
+        <Text style={styles.carInfo}>
+          <FontAwesome5 name="users" size={14} color="#003366" /> {item.seats} Seats</Text>
       </View>
       <View style={styles.carPrice}>
-        <Text style={styles.priceText}>{item.price} zł / day</Text>
+        <Text style={styles.priceText}>
+          <FontAwesome5 name="money-bill" size={14} color="#003366" /> {item.price} zł / day
+        </Text>
       </View>
     </Pressable>
   )

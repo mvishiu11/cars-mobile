@@ -1,15 +1,27 @@
 import React, { useState } from 'react'
-import { View, Text, Image, TextInput, Pressable, StyleSheet, ScrollView } from 'react-native'
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  Pressable,
+  StyleSheet,
+  ScrollView,
+  Linking,
+} from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import SafeLayout from '../../components/SafeLayout'
 import { exampleData } from '@/data/data'
 import Toast from 'react-native-toast-message'
+import { FontAwesome5 } from '@expo/vector-icons'
 
 export default function FlatDetails() {
   const { id } = useLocalSearchParams()
   const router = useRouter()
   const flat = exampleData.flats.find((flat) => flat.id === Number(id))
   const [termsAccepted, setTermsAccepted] = useState(false)
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
 
   if (!flat) {
     return (
@@ -20,8 +32,19 @@ export default function FlatDetails() {
   }
 
   const handleRent = () => {
-    exampleData.rentedFlats.push(flat)
-    
+    if (!startDate || !endDate) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please fill in both start and end dates.',
+      })
+      return
+    }
+
+    const rentedFlat = { ...flat, startDate, endDate }
+    exampleData.rentedFlats = exampleData.rentedFlats || []
+    exampleData.rentedFlats.push(rentedFlat)
+
     Toast.show({
       type: 'success',
       text1: 'Flat Rented!',
@@ -30,6 +53,13 @@ export default function FlatDetails() {
 
     router.push('/dashboard')
   }
+
+    const openGoogleMaps = () => {
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${flat.location}`
+        Linking.openURL(googleMapsUrl).catch((err) => {
+            console.error('Failed to open Google Maps:', err)
+        })
+    }
 
   return (
     <SafeLayout>
@@ -43,15 +73,33 @@ export default function FlatDetails() {
         <Text style={styles.flatPrice}>{flat.price} zł / day</Text>
 
         <View style={styles.flatDetails}>
-          <Text>🛏️ 3 Bedrooms</Text>
-          <Text>🛁 2 Bathrooms</Text>
-          <Text>📍 Google Maps</Text>
+            <Text>
+                <FontAwesome5 name="bed" size={16} color="#003366" /> 3 Bedrooms
+            </Text>
+            <Text>
+                <FontAwesome5 name="bath" size={16} color="#003366" /> 2 Bathrooms
+            </Text>
+            <Pressable onPress={openGoogleMaps} style={styles.googleMapsLink}>
+                <Text style={styles.googleMapsText}>
+                    <FontAwesome5 name="map-marker-alt" size={16} color="#003366" />{' '} Google Maps
+                </Text>
+            </Pressable>
         </View>
 
         <Text style={styles.sectionHeader}>Start Renting</Text>
-        <TextInput placeholder="Start Date" style={styles.input} />
+        <TextInput
+          placeholder="Start Date (e.g., 2024-11-30T10:00:00)"
+          style={styles.input}
+          value={startDate}
+          onChangeText={setStartDate}
+        />
         <Text style={styles.sectionHeader}>End Renting</Text>
-        <TextInput placeholder="End Date" style={styles.input} />
+        <TextInput
+          placeholder="End Date (e.g., 2024-12-07T18:45:00)"
+          style={styles.input}
+          value={endDate}
+          onChangeText={setEndDate}
+        />
 
         <View style={styles.checkboxContainer}>
           <Pressable onPress={() => setTermsAccepted(!termsAccepted)}>
@@ -111,6 +159,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 8,
     textAlign: 'center',
+  },
+  googleMapsLink: {
+    marginTop: 8,
+  },
+  googleMapsText: {
+    color: '#007BFF',
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
   input: {
     borderWidth: 1,

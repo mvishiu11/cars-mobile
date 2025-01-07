@@ -43,8 +43,6 @@ export const exampleData = {
         doors: 4,
         fuel: 'Diesel',
         capacity: '320 liters',
-        pickupDate: 'November 30th, 2024 | 10:00',
-        returnDate: 'December 7th, 2024 | 18:45',
       },
       {
         id: 2,
@@ -58,8 +56,6 @@ export const exampleData = {
         doors: 2,
         fuel: 'Petrol',
         capacity: '250 liters',
-        pickupDate: 'November 30th, 2024 | 10:00',
-        returnDate: 'December 7th, 2024 | 18:45',
       },
     ],
     flats: [
