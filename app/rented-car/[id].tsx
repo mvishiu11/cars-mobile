@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import SafeLayout from '../../components/SafeLayout'
 import QRCode from 'react-native-qrcode-svg'
 import { exampleData } from '@/data/data'
+import Toast from 'react-native-toast-message'
 
 export default function RentedCar() {
   const { id } = useLocalSearchParams()
@@ -19,23 +20,22 @@ export default function RentedCar() {
   }
 
   const handleCancel = () => {
-    Alert.alert(
-      'Cancel Rental',
-      `Are you sure you want to cancel your rental for ${car.name}?`,
-      [
-        { text: 'No', style: 'cancel' },
-        {
-          text: 'Yes',
-          style: 'destructive',
-          onPress: () => {
-            exampleData.rentedCars = exampleData.rentedCars.filter((c) => c.id !== car.id)
-
-            console.log('Rental canceled')
-            router.push('/dashboard')
-          },
-        },
-      ]
-    )
+    Toast.show({
+      type: 'info',
+      text1: 'Are you sure?',
+      text2: `Swipe down to dismiss or confirm below.`,
+      onPress: () => {
+        exampleData.rentedCars = exampleData.rentedCars.filter((c) => c.id !== car.id)
+  
+        Toast.show({
+          type: 'success',
+          text1: 'Rental Canceled',
+          text2: `${car.name} has been removed from your rented cars. 🚗`,
+        })
+  
+        router.push('/dashboard')
+      },
+    })
   }
 
   return (

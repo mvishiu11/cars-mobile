@@ -3,6 +3,7 @@ import { View, Text, Image, TextInput, Pressable, StyleSheet, ScrollView } from 
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Checkbox } from 'react-native-paper'
 import SafeLayout from '../../components/SafeLayout'
+import Toast from 'react-native-toast-message'
 import { exampleData } from '@/data/data'
 
 export default function CarDetails() {
@@ -22,15 +23,24 @@ export default function CarDetails() {
   const carFallbackImage = require('../../assets/images/car-fallback.png')
 
   const handleRent = () => {
+    const startDate = car.pickupDate
+    const endDate = car.returnDate
+    const pricePerDay = car.price
     exampleData.rentedCars.push(car)
+
+    Toast.show({
+        type: 'success',
+        text1: 'Car Rented!',
+        text2: `${car.name} has been successfully rented. 🚗`,
+    })
 
     router.push({
       pathname: '/rent-success',
       params: {
         carName: car.name,
-        startDate: car.pickupDate,
-        endDate: car.returnDate,
-        pricePerDay: car.price,
+        startDate: startDate,
+        endDate: endDate,
+        pricePerDay: pricePerDay,
       },
     })
   }

@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router'
 import { DripsyProvider } from 'dripsy'
 import { UserProvider } from '../context/UserContext'
+import Toast from 'react-native-toast-message'
 
 const theme = {
   colors: {
@@ -24,6 +25,7 @@ export default function Layout() {
           <Stack.Screen name="car-browser" options={{ title: 'Browse Cars' }} />
           <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
         </Stack>
+        <Toast />
       </DripsyProvider>
     </UserProvider>
   )
