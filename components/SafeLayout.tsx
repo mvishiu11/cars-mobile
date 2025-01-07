@@ -1,23 +1,30 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { View, Pressable, Image, StyleSheet } from 'react-native'
 import { useRouter, useSegments } from 'expo-router'
+import { useNavigation, DrawerActions } from '@react-navigation/native'
 import { UserContext } from '../context/UserContext'
 import { FontAwesome5 } from '@expo/vector-icons'
+import Sidebar from './Sidebar'
 
 export default function SafeLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const segments = useSegments()
+  const navigation = useNavigation()
   const { logout } = useContext(UserContext)
 
   const isDashboard = segments[0] === 'dashboard'
+  const [isSidebarVisible, setSidebarVisible] = useState(false)
 
   return (
     <View style={styles.container}>
+      {/* Sidebar */}
+      <Sidebar visible={isSidebarVisible} onClose={() => setSidebarVisible(false)} />
+
       {/* Header */}
       <View style={styles.header}>
         {/* Sidebar Button */}
         <Pressable
-          onPress={() => console.log('Sidebar opened')}
+          onPress={ () => setSidebarVisible(true) }
           style={styles.iconButton}
         >
           <FontAwesome5 name="bars" size={24} color="#003366" />
