@@ -10,38 +10,42 @@ export default function Dashboard() {
   const flatFallbackImage = require('../assets/images/flat-fallback.png')
 
   const renderCarItem = ({ item }: any) => (
-    <View
-      style={{
-        flexDirection: 'row',
-        backgroundColor: '#f9f9f9',
-        padding: 16,
-        borderRadius: 8,
-        marginBottom: 16,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-      }}
+    <Pressable
+          onPress={() => router.push(`/rented-car/${item.id}`)}
     >
-      <Image
-        source={item.image ? { uri: item.image } : carFallbackImage}
+      <View
         style={{
-          width: 60,
-          height: 60,
+          flexDirection: 'row',
+          backgroundColor: '#f9f9f9',
+          padding: 16,
           borderRadius: 8,
-          marginRight: 12,
+          marginBottom: 16,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+          elevation: 2,
         }}
-        resizeMode="cover"
-      />
-      <View style={{ flex: 1 }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 4 }}>
-          {item.name}
-        </Text>
-        <Text style={{ color: '#666' }}>Pickup: {item.pickupDate}</Text>
-        <Text style={{ color: '#666' }}>Return: {item.returnDate}</Text>
+      >
+        <Image
+          source={item.image ? { uri: item.image } : carFallbackImage}
+          style={{
+            width: 60,
+            height: 60,
+            borderRadius: 8,
+            marginRight: 12,
+          }}
+          resizeMode="cover"
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 4 }}>
+            {item.name}
+          </Text>
+          <Text style={{ color: '#666' }}>Pickup: {item.pickupDate}</Text>
+          <Text style={{ color: '#666' }}>Return: {item.returnDate}</Text>
+        </View>
       </View>
-    </View>
+    </Pressable>
   )
 
   const renderFlatItem = ({ item }: any) => (
@@ -98,7 +102,7 @@ export default function Dashboard() {
         Your cars
       </Text>
       <FlatList
-        data={exampleData.cars}
+        data={exampleData.rentedCars}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderCarItem}
         contentContainerStyle={{ paddingBottom: 16 }}

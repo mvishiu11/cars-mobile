@@ -1,5 +1,23 @@
 export const exampleData = {
     username: 'JohnDoe',
+    rentedCars: [
+      {
+        id: 1,
+        name: 'Car Name',
+        image: null,
+        location: 'Warsaw',
+        distance: '2.5 km',
+        seats: 5,
+        price: 300,
+        year: 2018,
+        doors: 4,
+        fuel: 'Diesel',
+        capacity: '320 liters',
+        pickupDate: 'November 30th, 2024 | 10:00',
+        returnDate: 'December 7th, 2024 | 18:45',
+      }
+    ],
+    rentedFlats: [],
     cars: [
       {
         id: 1,

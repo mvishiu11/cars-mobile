@@ -21,6 +21,20 @@ export default function CarDetails() {
 
   const carFallbackImage = require('../../assets/images/car-fallback.png')
 
+  const handleRent = () => {
+    exampleData.rentedCars.push(car)
+
+    router.push({
+      pathname: '/rent-success',
+      params: {
+        carName: car.name,
+        startDate: car.pickupDate,
+        endDate: car.returnDate,
+        pricePerDay: car.price,
+      },
+    })
+  }
+
   return (
     <SafeLayout>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -65,15 +79,7 @@ export default function CarDetails() {
             !termsAccepted && { backgroundColor: '#999' },
           ]}
           disabled={!termsAccepted}
-          onPress={() => router.push({
-            pathname: '/rent-success',
-            params: {
-              carName: 'Car Name',
-              startDate: '2024-11-30T10:00:00',
-              endDate: '2024-12-07T18:45:00',
-              pricePerDay: 300,
-            },
-          })}
+          onPress={handleRent}
         >
           <Text style={styles.rentButtonText}>Rent</Text>
         </Pressable>
