@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, Image, TextInput, Pressable, StyleSheet, ScrollView } from 'react-native'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Checkbox } from 'react-native-paper'
 import SafeLayout from '../../components/SafeLayout'
 import { exampleData } from '@/data/data'
@@ -9,6 +9,7 @@ export default function CarDetails() {
   const { id } = useLocalSearchParams()
   const car = exampleData.cars.find((car) => car.id === Number(id))
   const [termsAccepted, setTermsAccepted] = useState(false)
+  const router = useRouter()
 
   if (!car) {
     return (
@@ -64,7 +65,15 @@ export default function CarDetails() {
             !termsAccepted && { backgroundColor: '#999' },
           ]}
           disabled={!termsAccepted}
-          onPress={() => console.log('Rent confirmed!')}
+          onPress={() => router.push({
+            pathname: '/rent-success',
+            params: {
+              carName: 'Car Name',
+              startDate: '2024-11-30T10:00:00',
+              endDate: '2024-12-07T18:45:00',
+              pricePerDay: 300,
+            },
+          })}
         >
           <Text style={styles.rentButtonText}>Rent</Text>
         </Pressable>
