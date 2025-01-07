@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, Image, FlatList, Pressable } from 'react-native'
 import SafeLayout from '../components/SafeLayout'
+import { useRouter } from 'expo-router'
 
 // Example data
 const exampleData = {
@@ -9,7 +10,7 @@ const exampleData = {
     {
       id: 1,
       name: 'Car Name',
-      image: null, // No image provided
+      image: null,
       pickupDate: 'November 30th, 2024 | 10:00',
       returnDate: 'December 7th, 2024 | 18:45',
     },
@@ -25,7 +26,7 @@ const exampleData = {
     {
       id: 1,
       name: 'Flat Data',
-      image: null, // No image provided
+      image: null,
       checkInDate: 'November 30th, 2024 | 10:00',
       checkOutDate: 'December 7th, 2024 | 18:45',
     },
@@ -33,6 +34,7 @@ const exampleData = {
 }
 
 export default function Dashboard() {
+  const router = useRouter()
   const carFallbackImage = require('../assets/images/car-fallback.png')
   const flatFallbackImage = require('../assets/images/flat-fallback.png')
 
@@ -152,7 +154,7 @@ export default function Dashboard() {
           alignItems: 'center',
           marginTop: 16,
         }}
-        onPress={() => console.log('Browse cars pressed!')}
+        onPress={() => router.push('/car-browser')}
       >
         <Text style={{ color: '#ffffff', fontWeight: 'bold', fontSize: 16 }}>
           Browse cars

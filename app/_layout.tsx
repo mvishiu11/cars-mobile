@@ -17,7 +17,13 @@ export default function Layout() {
   return (
     <UserProvider>
       <DripsyProvider theme={theme}>
-        <Stack />
+        <Stack initialRouteName="welcome">
+          <Stack.Screen name="welcome" options={{ title: 'Welcome' }} />
+          <Stack.Screen name="login-register" options={{ title: 'Login & Register' }} />
+          <Stack.Screen name="dashboard" options={{ title: 'Dashboard' }} />
+          <Stack.Screen name="car-browser" options={{ title: 'Browse Cars' }} />
+          <Stack.Screen name="not-found" options={{ title: 'Not Found' }} />
+        </Stack>
       </DripsyProvider>
     </UserProvider>
   )
