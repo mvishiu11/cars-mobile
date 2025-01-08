@@ -1,5 +1,7 @@
 import { Stack } from 'expo-router'
 import { DripsyProvider } from 'dripsy'
+import { UserProvider } from '../context/UserContext'
+import Toast from 'react-native-toast-message'
 
 const theme = {
   colors: {
@@ -14,8 +16,17 @@ const theme = {
 
 export default function Layout() {
   return (
-    <DripsyProvider theme={theme}>
-      <Stack />
-    </DripsyProvider>
+    <UserProvider>
+      <DripsyProvider theme={theme}>
+        <Stack initialRouteName="welcome">
+          <Stack.Screen name="welcome" options={{ title: 'Welcome' }} />
+          <Stack.Screen name="login-register" options={{ title: 'Login & Register' }} />
+          <Stack.Screen name="dashboard" options={{ title: 'Dashboard' }} />
+          <Stack.Screen name="car-browser" options={{ title: 'Browse Cars' }} />
+          <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
+        </Stack>
+        <Toast />
+      </DripsyProvider>
+    </UserProvider>
   )
 }

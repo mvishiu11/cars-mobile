@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { View, Text, TextInput, Pressable, Image } from 'react-native'
+import { useRouter } from 'expo-router'
 
 export default function LoginRegisterScreen() {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login')
+  const router = useRouter()
 
   const TabButton = ({ label, isActive, onPress }: any) => (
     <Pressable
@@ -110,6 +112,7 @@ export default function LoginRegisterScreen() {
               borderRadius: 8,
               alignItems: 'center',
             }}
+            onPress={() => router.push('/dashboard')}
           >
             <Text
               style={{
