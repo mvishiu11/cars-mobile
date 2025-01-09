@@ -31,37 +31,41 @@ export default function Settings() {
 	};
 
 	return (
-		<SafeAreaView style={{ paddingHorizontal: 16 }}>
-			<View style={styles.container}>
-				<Text style={styles.header}>User Settings</Text>
-				<Text style={styles.subHeader}>
-					Enter your new email/username.
-					{"\n"}Leave empty to keep it as-is.
-				</Text>
+			<SafeAreaView style={styles.container}>
+				<View style={styles.card}>
+					<Text style={styles.header}>User Settings</Text>
+					<Text style={styles.subHeader}>
+						Enter your new email/username.
+						{"\n"}Leave empty to keep it as-is.
+					</Text>
 
-				<Text style={styles.label}>Email</Text>
-				<TextInput
-					style={styles.input}
-					placeholder="email@example.com"
-					value={email}
-					onChangeText={setEmail}
-				/>
+					<View style={styles.formGroup}>
+						<Text style={styles.label}>Email</Text>
+						<TextInput
+							style={styles.input}
+							placeholder="email@example.com"
+							value={email}
+							onChangeText={setEmail}
+						/>
+					</View>
 
-				<Text style={styles.label}>Username</Text>
-				<TextInput
-					style={styles.input}
-					placeholder="Username"
-					value={username}
-					onChangeText={setUsername}
-				/>
+					<View style={styles.formGroup}>
+						<Text style={styles.label}>Username</Text>
+						<TextInput
+							style={styles.input}
+							placeholder="Username"
+							value={username}
+							onChangeText={setUsername}
+						/>
+					</View>
 
-				<Pressable style={styles.updateButton} onPress={handleUpdate}>
-					<Text style={styles.updateButtonText}>Update</Text>
-				</Pressable>
+					<Pressable style={styles.updateButton} onPress={handleUpdate}>
+						<Text style={styles.updateButtonText}>Update</Text>
+					</Pressable>
+				</View>
 
 				<Toast />
-			</View>
-		</SafeAreaView>
+			</SafeAreaView>
 	);
 }
 
@@ -70,6 +74,17 @@ const styles = StyleSheet.create({
 		flex: 1,
 		padding: 16,
 		justifyContent: "center",
+		backgroundColor: "#f9f9f9",
+	},
+	card: {
+		backgroundColor: "#ffffff",
+		padding: 20,
+		borderRadius: 12,
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 4 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 4,
 	},
 	header: {
 		fontSize: 24,
@@ -84,9 +99,13 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		marginBottom: 24,
 	},
+	formGroup: {
+		marginBottom: 16,
+	},
 	label: {
 		fontSize: 16,
 		fontWeight: "bold",
+		color: "#003366",
 		marginBottom: 8,
 	},
 	input: {
@@ -95,11 +114,11 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		paddingHorizontal: 12,
 		paddingVertical: 8,
-		marginBottom: 16,
+		backgroundColor: "#f7f7f7",
 	},
 	updateButton: {
 		backgroundColor: "#003366",
-		paddingVertical: 12,
+		paddingVertical: 14,
 		borderRadius: 8,
 		alignItems: "center",
 		marginTop: 16,
