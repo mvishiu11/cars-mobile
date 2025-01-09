@@ -1,50 +1,103 @@
-# Welcome to your Expo app 👋
+# Cars - Car Rental Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Cars is a modern, user-friendly mobile application for browsing, renting, and managing cars, which also allows for interacting in the same way with flats via a partner API. Designed with React Native and Expo, it provides seamless functionality with an intuitive and elegant UI.
 
-## Get started
+---
 
-1. Install dependencies
+## Table of Contents
 
+- [Cars - Car Rental Mobile App](#cars---car-rental-mobile-app)
+  - [Table of Contents](#table-of-contents)
+  - [Technologies Used](#technologies-used)
+    - [Frontend](#frontend)
+    - [State Management](#state-management)
+    - [Additional Libraries](#additional-libraries)
+  - [Setup and Installation](#setup-and-installation)
+    - [Prerequisites](#prerequisites)
+    - [Steps to Run the Project](#steps-to-run-the-project)
+  - [Development Guidelines](#development-guidelines)
+  - [License](#license)
+
+---
+
+## Technologies Used
+
+### Frontend
+- **React Native**: For cross-platform mobile development.
+- **Expo**: To streamline development and deployment.
+- **Dripsy**: A responsive design system.
+- **React Navigation**: For navigation and routing.
+- **react-native-vector-icons**: For beautiful, scalable icons.
+- **DateTimePicker**: For selecting pickup and return dates.
+
+### State Management
+- **React Context API**: To manage global application state.
+
+### Additional Libraries
+- **Toast Messages**: `react-native-toast-message` for real-time user feedback.
+
+---
+
+## Setup and Installation
+
+### Prerequisites
+- Node.js (v17 or above)
+- Expo CLI (`npm install -g expo-cli`)
+
+### Steps to Run the Project
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/username/car-rental-app.git
+   cd car-rental-app
+   ```
+
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. **Start the development server**:
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+   or 
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   ```bash
+   npx expo start --lan
+   ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+   for LAN access.
 
-## Get a fresh project
+4. **Run on your device**:
+   - Scan the QR code in the Expo Go app (iOS/Android).
+   - Alternatively, run it on an emulator/simulator:
+     ```bash
+     npx expo start --android
+     npx expo start --ios
+     ```
 
-When you're ready, run:
+## Development Guidelines
 
-```bash
-npm run reset-project
-```
+1. **Code Style**:
+   - Follow ESLint and Prettier guidelines.
+   - Maintain consistency in indentation, variable names, and formatting.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. **Documentation**:
+   - All components and functions should have descriptive comments.
+   - Use Google-style docstrings where applicable.
 
-## Learn more
+3. **Responsive Design**:
+   - Use Dripsy for responsive styling.
+   - Test layouts on different devices and screen sizes.
+   - Ensure that the app is accessible and usable on both iOS and Android.
 
-To learn more about developing your project with Expo, look at the following resources:
+4. **Error Handling**:
+   - Use Toast messages to handle errors and provide feedback to users.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## License
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is licensed under the MIT License.
