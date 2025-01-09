@@ -20,6 +20,7 @@ import Toast from "react-native-toast-message";
 import { exampleData } from "@/data/data";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { P } from "dripsy";
 
 export default function CarDetails() {
 	const { id } = useLocalSearchParams();
@@ -131,81 +132,101 @@ export default function CarDetails() {
 
 				{/* Renting Form */}
 				<Text style={styles.sectionHeader}>Start Renting</Text>
-				<Modal
-					visible={isPickupDateModalOpen}
-					transparent={true}
-					animationType="fade"
-				>
-					<View
-						style={{
-							flex: 1,
-							justifyContent: "center",
-							alignItems: "center",
-							backgroundColor: "rgba(0, 0, 0, 0.75)",
-						}}
+				{Platform.OS === "ios" ? (
+					<Modal
+						visible={isPickupDateModalOpen}
+						transparent={true}
+						animationType="fade"
 					>
 						<View
 							style={{
-								backgroundColor: "#fff",
-								borderRadius: 16,
+								flex: 1,
 								justifyContent: "center",
 								alignItems: "center",
-								marginHorizontal: 16,
+								backgroundColor: "rgba(0, 0, 0, 0.75)",
 							}}
 						>
-							<DateTimePicker
-								mode="datetime"
-								display="inline"
-								value={pickupDate}
-								minuteInterval={15}
-								minimumDate={new Date()}
-								themeVariant="light"
-								textColor="#000"
-								accentColor="#00246B"
-								onChange={(event, date) => {
-									if (event.type === "set" && date) {
-										dateRef.current = date;
-										if (Platform.OS === "android") {
-											setPickupDate(dateRef.current);
-											setReturnDate(dateRef.current);
-										}
-									} else {
-										if (Platform.OS !== "ios") {
-											setPickupDateModalOpen(false);
-										}
-									}
-								}}
-							/>
 							<View
 								style={{
-									flexDirection: "row",
-									justifyContent: "space-evenly",
-									paddingVertical: 8,
+									backgroundColor: "#fff",
+									borderRadius: 16,
+									justifyContent: "center",
+									alignItems: "center",
+									marginHorizontal: 16,
 								}}
 							>
-								<View style={{ width: "50%" }}>
-									<Button
-										onPress={() =>
-											setPickupDateModalOpen(false)
+								<DateTimePicker
+									mode="datetime"
+									display="inline"
+									value={pickupDate}
+									minuteInterval={15}
+									minimumDate={new Date()}
+									themeVariant="light"
+									textColor="#000"
+									accentColor="#00246B"
+									onChange={(event, date) => {
+										if (event.type === "set" && date) {
+											dateRef.current = date;
+											if (Platform.OS === "android") {
+												setPickupDate(dateRef.current);
+												setReturnDate(dateRef.current);
+											}
+										} else {
+											if (Platform.OS !== "ios") {
+												setPickupDateModalOpen(false);
+											}
 										}
-										title="Cancel"
-										color={"#ff0000"}
-									/>
-								</View>
-								<View style={{ width: "50%" }}>
-									<Button
-										title="Set"
-										onPress={() => {
-											setPickupDateModalOpen(false);
-											setPickupDate(dateRef.current);
-											setReturnDate(dateRef.current);
-										}}
-									/>
+									}}
+								/>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-evenly",
+										paddingVertical: 8,
+									}}
+								>
+									<View style={{ width: "50%" }}>
+										<Button
+											onPress={() =>
+												setPickupDateModalOpen(false)
+											}
+											title="Cancel"
+											color={"#ff0000"}
+										/>
+									</View>
+									<View style={{ width: "50%" }}>
+										<Button
+											title="Set"
+											onPress={() => {
+												setPickupDateModalOpen(false);
+												setPickupDate(dateRef.current);
+												setReturnDate(dateRef.current);
+											}}
+										/>
+									</View>
 								</View>
 							</View>
 						</View>
-					</View>
-				</Modal>
+					</Modal>
+				) : (
+					isPickupDateModalOpen && (
+						<DateTimePicker
+							value={pickupDate}
+							minuteInterval={15}
+							minimumDate={new Date()}
+							textColor="#000"
+							accentColor="#00246B"
+							onChange={(event, date) => {
+								if (event.type === "set" && date) {
+									dateRef.current = date;
+									setPickupDate(dateRef.current);
+									setReturnDate(dateRef.current);
+								}
+								setPickupDateModalOpen(false);
+							}}
+						/>
+					)
+				)}
 				<Pressable onPress={() => setPickupDateModalOpen(true)}>
 					<TextInput
 						placeholder="Start Date (e.g., 2024-11-30T10:00:00)"
