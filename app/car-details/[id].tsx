@@ -206,13 +206,14 @@ export default function CarDetails() {
 						</View>
 					</View>
 				</Modal>
-				<TextInput
-					placeholder="Start Date (e.g., 2024-11-30T10:00:00)"
-					editable={false}
-					style={styles.input}
-					value={pickupDate.toLocaleString().slice(0, -3)}
-					onPress={() => setPickupDateModalOpen(true)}
-				/>
+				<Pressable onPress={() => setPickupDateModalOpen(true)}>
+					<TextInput
+						placeholder="Start Date (e.g., 2024-11-30T10:00:00)"
+						editable={false}
+						style={styles.input}
+						value={pickupDate.toLocaleString().slice(0, -3)}
+					/>
+				</Pressable>
 				<Text style={styles.sectionHeader}>End Renting</Text>
 				<Modal
 					visible={isReturnDateModalOpen}
@@ -287,14 +288,15 @@ export default function CarDetails() {
 						</View>
 					</View>
 				</Modal>
-				<TextInput
-					placeholder="Start Date (e.g., 2024-11-30T10:00:00)"
-					editable={false}
-					style={styles.input}
-					value={returnDate.toLocaleString().slice(0, -3)}
-					onPress={() => setReturnDateModalOpen(true)}
-				/>
-
+				<Pressable>
+					<TextInput
+						placeholder="Start Date (e.g., 2024-11-30T10:00:00)"
+						editable={false}
+						style={styles.input}
+						value={returnDate.toLocaleString().slice(0, -3)}
+						onPress={() => setReturnDateModalOpen(true)}
+					/>
+				</Pressable>
 				{/* Terms and Conditions */}
 				<View style={styles.checkboxContainer}>
 					<Checkbox
