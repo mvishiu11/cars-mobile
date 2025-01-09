@@ -3,7 +3,6 @@ import {
 	View,
 	Text,
 	Image,
-	TextInput,
 	Pressable,
 	StyleSheet,
 	ScrollView,
@@ -13,29 +12,39 @@ import {
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Checkbox from "expo-checkbox";
-import DatePicker from "react-native-date-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import Toast from "react-native-toast-message";
 import { exampleData } from "@/data/data";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { P } from "dripsy";
 
 export default function CarDetails() {
 	const { id } = useLocalSearchParams();
 	const car = exampleData.cars.find((car) => car.id === Number(id));
 	const [termsAccepted, setTermsAccepted] = useState(false);
-	const [pickupDate, setPickupDate] = useState(new Date());
+
+	let nextAvailableDate = new Date();
+	if (nextAvailableDate.getMinutes() % 15 !== 0) {
+		nextAvailableDate.setMinutes(
+			nextAvailableDate.getMinutes() +
+				15 -
+				(nextAvailableDate.getMinutes() % 15)
+		);
+	}
+
+	const [pickupDate, setPickupDate] = useState(nextAvailableDate);
 	const [isPickupDateModalOpen, setPickupDateModalOpen] = useState(false);
-	const [returnDate, setReturnDate] = useState(new Date());
+	const [isPickupTimeModalOpen, setPickupTimeModalOpen] = useState(false);
+	const [returnDate, setReturnDate] = useState(nextAvailableDate);
 	const [isReturnDateModalOpen, setReturnDateModalOpen] = useState(false);
+	const [isReturnTimeModalOpen, setReturnTimeModalOpen] = useState(false);
 	const dateRef = useRef(new Date());
 	const router = useRouter();
 
 	if (!car) {
 		return (
-			<SafeAreaView style={{ paddingHorizontal: 16 }}>
+			<SafeAreaView style={{ paddingHorizontal: 32 }}>
 				<Text style={styles.errorText}>Car not found!</Text>
 			</SafeAreaView>
 		);
@@ -80,7 +89,7 @@ export default function CarDetails() {
 	};
 
 	return (
-		<SafeAreaView style={{ paddingHorizontal: 16 }}>
+		<SafeAreaView style={{ paddingHorizontal: 32 }}>
 			<ScrollView contentContainerStyle={styles.scrollContent}>
 				{/* Car Image */}
 				<Image
@@ -156,25 +165,16 @@ export default function CarDetails() {
 								}}
 							>
 								<DateTimePicker
-									mode="datetime"
+									mode="date"
 									display="inline"
 									value={pickupDate}
-									minuteInterval={15}
-									minimumDate={new Date()}
+									minimumDate={nextAvailableDate}
 									themeVariant="light"
 									textColor="#000"
 									accentColor="#00246B"
 									onChange={(event, date) => {
 										if (event.type === "set" && date) {
 											dateRef.current = date;
-											if (Platform.OS === "android") {
-												setPickupDate(dateRef.current);
-												setReturnDate(dateRef.current);
-											}
-										} else {
-											if (Platform.OS !== "ios") {
-												setPickupDateModalOpen(false);
-											}
 										}
 									}}
 								/>
@@ -212,10 +212,7 @@ export default function CarDetails() {
 					isPickupDateModalOpen && (
 						<DateTimePicker
 							value={pickupDate}
-							minuteInterval={15}
-							minimumDate={new Date()}
-							textColor="#000"
-							accentColor="#00246B"
+							minimumDate={nextAvailableDate}
 							onChange={(event, date) => {
 								if (event.type === "set" && date) {
 									dateRef.current = date;
@@ -227,97 +224,340 @@ export default function CarDetails() {
 						/>
 					)
 				)}
-				<Pressable onPress={() => setPickupDateModalOpen(true)}>
-					<TextInput
-						placeholder="Start Date (e.g., 2024-11-30T10:00:00)"
-						editable={false}
-						style={styles.input}
-						value={pickupDate.toLocaleString().slice(0, -3)}
-					/>
-				</Pressable>
-				<Text style={styles.sectionHeader}>End Renting</Text>
-				<Modal
-					visible={isReturnDateModalOpen}
-					transparent={true}
-					animationType="fade"
-				>
-					<View
-						style={{
-							flex: 1,
-							justifyContent: "center",
-							alignItems: "center",
-							backgroundColor: "rgba(0, 0, 0, 0.75)",
-						}}
+				{Platform.OS === "ios" ? (
+					<Modal
+						visible={isPickupTimeModalOpen}
+						transparent={true}
+						animationType="fade"
 					>
 						<View
 							style={{
-								backgroundColor: "#fff",
-								borderRadius: 16,
+								flex: 1,
 								justifyContent: "center",
 								alignItems: "center",
-								marginHorizontal: 16,
+								backgroundColor: "rgba(0, 0, 0, 0.75)",
 							}}
 						>
-							<DateTimePicker
-								mode="datetime"
-								display="inline"
-								value={returnDate}
-								minuteInterval={15}
-								minimumDate={pickupDate}
-								themeVariant="light"
-								textColor="#000"
-								accentColor="#00246B"
-								onChange={(event, date) => {
-									if (event.type === "set" && date) {
-										dateRef.current = date;
-										if (Platform.OS === "android") {
-											setReturnDate(dateRef.current);
-										}
-									} else {
-										if (Platform.OS !== "ios") {
-											setReturnDateModalOpen(false);
-										}
-									}
-								}}
-							/>
 							<View
 								style={{
-									flexDirection: "row",
-									justifyContent: "space-evenly",
-									paddingVertical: 8,
+									backgroundColor: "#fff",
+									borderRadius: 16,
+									justifyContent: "center",
+									alignItems: "center",
+									marginHorizontal: 16,
 								}}
 							>
-								<View style={{ width: "50%" }}>
-									<Button
-										onPress={() =>
-											setReturnDateModalOpen(false)
+								<DateTimePicker
+									mode="time"
+									display="spinner"
+									minuteInterval={15}
+									value={pickupDate}
+									minimumDate={nextAvailableDate}
+									themeVariant="light"
+									textColor="#000"
+									accentColor="#00246B"
+									onChange={(event, date) => {
+										if (event.type === "set" && date) {
+											dateRef.current = date;
 										}
-										title="Cancel"
-										color={"#ff0000"}
-									/>
-								</View>
-								<View style={{ width: "50%" }}>
-									<Button
-										title="Set"
-										onPress={() => {
-											setReturnDateModalOpen(false);
-											setReturnDate(dateRef.current);
-										}}
-									/>
+									}}
+								/>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-evenly",
+										paddingVertical: 8,
+									}}
+								>
+									<View style={{ width: "50%" }}>
+										<Button
+											onPress={() =>
+												setPickupTimeModalOpen(false)
+											}
+											title="Cancel"
+											color={"#ff0000"}
+										/>
+									</View>
+									<View style={{ width: "50%" }}>
+										<Button
+											title="Set"
+											onPress={() => {
+												setPickupTimeModalOpen(false);
+												setPickupDate(dateRef.current);
+												setReturnDate(dateRef.current);
+											}}
+										/>
+									</View>
 								</View>
 							</View>
 						</View>
-					</View>
-				</Modal>
-				<Pressable>
-					<TextInput
-						placeholder="Start Date (e.g., 2024-11-30T10:00:00)"
-						editable={false}
-						style={styles.input}
-						value={returnDate.toLocaleString().slice(0, -3)}
+					</Modal>
+				) : (
+					isPickupTimeModalOpen && (
+						<DateTimePicker
+							value={pickupDate}
+							mode="time"
+							positiveButton={{ label: "Set" }}
+							negativeButton={{
+								label: "Cancel",
+								textColor: "#ff0000",
+							}}
+							onChange={(event, date) => {
+								if (event.type === "set" && date) {
+									if (date < new Date()) {
+										alert("Please select a future time.");
+									} else {
+										if (date.getMinutes() % 15 === 0) {
+											dateRef.current = date;
+											setPickupDate(dateRef.current);
+											setReturnDate(dateRef.current);
+										} else {
+											alert(
+												"Please select a time that is a multiple of 15 minutes."
+											);
+										}
+									}
+								}
+								setPickupTimeModalOpen(false);
+							}}
+						/>
+					)
+				)}
+				<View
+					style={{
+						flexDirection: "row",
+						gap: 16,
+					}}
+				>
+					<Pressable
+						onPress={() => setPickupDateModalOpen(true)}
+						style={{ flex: 1 }}
+					>
+						<Text style={styles.input}>
+							{new Intl.DateTimeFormat("pl-PL", {
+								dateStyle: "short",
+							}).format(pickupDate)}
+						</Text>
+					</Pressable>
+					<Pressable
+						onPress={() => setPickupTimeModalOpen(true)}
+						style={{ flex: 1 }}
+					>
+						<Text style={styles.input}>
+							{new Intl.DateTimeFormat("pl-PL", {
+								timeZone: "Europe/Warsaw",
+								timeStyle: "short",
+							}).format(pickupDate)}
+						</Text>
+					</Pressable>
+				</View>
+				<Text style={styles.sectionHeader}>End Renting</Text>
+				{Platform.OS === "ios" ? (
+					<Modal
+						visible={isReturnDateModalOpen}
+						transparent={true}
+						animationType="fade"
+					>
+						<View
+							style={{
+								flex: 1,
+								justifyContent: "center",
+								alignItems: "center",
+								backgroundColor: "rgba(0, 0, 0, 0.75)",
+							}}
+						>
+							<View
+								style={{
+									backgroundColor: "#fff",
+									borderRadius: 16,
+									justifyContent: "center",
+									alignItems: "center",
+									marginHorizontal: 16,
+								}}
+							>
+								<DateTimePicker
+									mode="date"
+									display="inline"
+									value={returnDate}
+									minimumDate={pickupDate}
+									themeVariant="light"
+									textColor="#000"
+									accentColor="#00246B"
+									onChange={(event, date) => {
+										if (event.type === "set" && date) {
+											dateRef.current = date;
+										}
+									}}
+								/>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-evenly",
+										paddingVertical: 8,
+									}}
+								>
+									<View style={{ width: "50%" }}>
+										<Button
+											onPress={() =>
+												setReturnDateModalOpen(false)
+											}
+											title="Cancel"
+											color={"#ff0000"}
+										/>
+									</View>
+									<View style={{ width: "50%" }}>
+										<Button
+											title="Set"
+											onPress={() => {
+												setReturnDateModalOpen(false);
+												setReturnDate(dateRef.current);
+											}}
+										/>
+									</View>
+								</View>
+							</View>
+						</View>
+					</Modal>
+				) : (
+					isReturnDateModalOpen && (
+						<DateTimePicker
+							value={returnDate}
+							minimumDate={pickupDate}
+							onChange={(event, date) => {
+								if (event.type === "set" && date) {
+									dateRef.current = date;
+									setReturnDate(dateRef.current);
+								}
+								setReturnDateModalOpen(false);
+							}}
+						/>
+					)
+				)}
+				{Platform.OS === "ios" ? (
+					<Modal
+						visible={isReturnTimeModalOpen}
+						transparent={true}
+						animationType="fade"
+					>
+						<View
+							style={{
+								flex: 1,
+								justifyContent: "center",
+								alignItems: "center",
+								backgroundColor: "rgba(0, 0, 0, 0.75)",
+							}}
+						>
+							<View
+								style={{
+									backgroundColor: "#fff",
+									borderRadius: 16,
+									justifyContent: "center",
+									alignItems: "center",
+									marginHorizontal: 16,
+								}}
+							>
+								<DateTimePicker
+									mode="time"
+									display="spinner"
+									minuteInterval={15}
+									value={returnDate}
+									minimumDate={pickupDate}
+									themeVariant="light"
+									textColor="#000"
+									accentColor="#00246B"
+									onChange={(event, date) => {
+										if (event.type === "set" && date) {
+											dateRef.current = date;
+										}
+									}}
+								/>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-evenly",
+										paddingVertical: 8,
+									}}
+								>
+									<View style={{ width: "50%" }}>
+										<Button
+											onPress={() =>
+												setReturnTimeModalOpen(false)
+											}
+											title="Cancel"
+											color={"#ff0000"}
+										/>
+									</View>
+									<View style={{ width: "50%" }}>
+										<Button
+											title="Set"
+											onPress={() => {
+												setReturnTimeModalOpen(false);
+												setReturnDate(dateRef.current);
+											}}
+										/>
+									</View>
+								</View>
+							</View>
+						</View>
+					</Modal>
+				) : (
+					isReturnTimeModalOpen && (
+						<DateTimePicker
+							value={returnDate}
+							mode="time"
+							positiveButton={{ label: "Set" }}
+							negativeButton={{
+								label: "Cancel",
+								textColor: "#ff0000",
+							}}
+							onChange={(event, date) => {
+								if (event.type === "set" && date) {
+									if (date < new Date()) {
+										alert("Please select a future time.");
+									} else {
+										if (date.getMinutes() % 15 === 0) {
+											dateRef.current = date;
+											setReturnDate(dateRef.current);
+										} else {
+											alert(
+												"Please select a time that is a multiple of 15 minutes."
+											);
+										}
+									}
+								}
+								setReturnTimeModalOpen(false);
+							}}
+						/>
+					)
+				)}
+				<View
+					style={{
+						flexDirection: "row",
+						gap: 16,
+					}}
+				>
+					<Pressable
 						onPress={() => setReturnDateModalOpen(true)}
-					/>
-				</Pressable>
+						style={{ flex: 1 }}
+					>
+						<Text style={styles.input}>
+							{new Intl.DateTimeFormat("pl-PL", {
+								dateStyle: "short",
+							}).format(returnDate)}
+						</Text>
+					</Pressable>
+					<Pressable
+						onPress={() => setReturnTimeModalOpen(true)}
+						style={{ flex: 1 }}
+					>
+						<Text style={styles.input}>
+							{new Intl.DateTimeFormat("pl-PL", {
+								timeZone: "Europe/Warsaw",
+								timeStyle: "short",
+							}).format(returnDate)}
+						</Text>
+					</Pressable>
+				</View>
 				{/* Terms and Conditions */}
 				<View style={styles.checkboxContainer}>
 					<Checkbox
@@ -353,7 +593,6 @@ export default function CarDetails() {
 const styles = StyleSheet.create({
 	scrollContent: {
 		flexGrow: 1,
-		padding: 16,
 	},
 	carImage: {
 		width: "100%",
