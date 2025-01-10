@@ -25,6 +25,8 @@ export interface Car {
 	doors: number;
 	fuel: Fuel;
 	capacity: number;
+	pickupDate?: string;
+	returnDate?: string;
 }
 
 export const CarInfo = ({ car }: { car: Car }) => {
@@ -118,12 +120,7 @@ export default function CarDetails() {
 
 		router.push({
 			pathname: "/rent-success",
-			params: {
-				carName: car.name,
-				startDate: pickupDate.toISOString(),
-				endDate: returnDate.toISOString(),
-				pricePerDay: car.price,
-			},
+			params: rentedCar,
 		});
 	};
 
