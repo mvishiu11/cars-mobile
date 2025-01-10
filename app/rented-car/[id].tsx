@@ -1,25 +1,18 @@
 import React from "react";
-import {
-	View,
-	Text,
-	Image,
-	Pressable,
-	StyleSheet,
-	ScrollView,
-	Alert,
-} from "react-native";
+import { Text, Image, Pressable, StyleSheet, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import SafeLayout from "../../components/SafeLayout";
 import QRCode from "react-native-qrcode-svg";
 import { exampleData } from "@/data/data";
 import Toast from "react-native-toast-message";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Car, CarInfo } from "../car-details/[id]";
 
 export default function RentedCar() {
 	const { id } = useLocalSearchParams();
 	const router = useRouter();
-	const car = exampleData.rentedCars.find((car) => car.id === Number(id));
+	const car = exampleData.rentedCars.find(
+		(car) => car.id === Number(id)
+	) as Car;
 
 	if (!car) {
 		return (
@@ -30,104 +23,75 @@ export default function RentedCar() {
 	}
 
 	const handleCancel = () => {
+		Alert.alert(
+			"Are you sure?",
+			`Do you want to cancel the rental of ${car.name}?`,
+			[
+				{
+					text: "Cancel",
+					style: "cancel",
+				},
+				{
+					text: "Confirm",
+					style: "destructive",
+					onPress: () => {
+						exampleData.rentedCars = exampleData.rentedCars.filter(
+							(c) => c.id !== car.id
+						);
+						router.push("/dashboard");
+					},
+				},
+			]
+		);
 		Toast.show({
-			type: "info",
-			text1: "Are you sure?",
-			text2: `Swipe down to dismiss or confirm below.`,
-			onPress: () => {
-				exampleData.rentedCars = exampleData.rentedCars.filter(
-					(c) => c.id !== car.id
-				);
-
-				Toast.show({
-					type: "success",
-					text1: "Rental Canceled",
-					text2: `${car.name} has been removed from your rented cars. 🚗`,
-				});
-
-				router.push("/dashboard");
-			},
+			type: "success",
+			text1: "Rental Canceled",
+			text2: `${car.name} has been removed from your rented cars. 🚗`,
 		});
 	};
 
 	return (
-		<SafeAreaView style={{ paddingHorizontal: 16 }}>
-			<ScrollView contentContainerStyle={styles.scrollContent}>
-				{/* Car Image */}
-				<Image
-					source={
-						car.image
-							? { uri: car.image }
-							: require("../../assets/images/car-fallback.png")
-					}
-					style={styles.carImage}
-					resizeMode="contain"
-				/>
+		<SafeAreaView
+			style={{ paddingHorizontal: 16, alignItems: "center" }}
+			edges={["right", "bottom", "left"]}
+		>
+			{/* Car Image */}
+			<Image
+				source={
+					car.image
+						? { uri: car.image }
+						: require("../../assets/images/car-fallback.png")
+				}
+				style={styles.carImage}
+				resizeMode="contain"
+			/>
 
-				{/* Car Details */}
-				<Text style={styles.carName}>{car.name}</Text>
-				<View style={styles.carDetails}>
-					<Text>
-						<FontAwesome5 name="map-marker-alt" /> {car.location} •{" "}
-						{car.distance}
-					</Text>
-					<Text>
-						<FontAwesome5 name="users" size={14} color="#003366" />{" "}
-						{car.seats} Seats
-					</Text>
-					<Text>
-						<FontAwesome5
-							name="gas-pump"
-							size={14}
-							color="#003366"
-						/>{" "}
-						{car.fuel}
-					</Text>
-					<Text>
-						<FontAwesome5
-							name="calendar"
-							size={14}
-							color="#003366"
-						/>{" "}
-						{car.year}
-					</Text>
-					<Text>
-						<FontAwesome5
-							name="door-open"
-							size={14}
-							color="#003366"
-						/>{" "}
-						{car.doors} Doors
-					</Text>
-					<Text>
-						<FontAwesome5 name="box" size={14} color="#003366" />{" "}
-						{car.capacity}
-					</Text>
-				</View>
+			{/* Car Details */}
+			<Text style={styles.carName}>{car.name}</Text>
+			<CarInfo car={car} />
 
-				{/* Rental Period */}
-				<Text style={styles.sectionHeader}>Rental Period</Text>
-				<Text style={styles.rentalDates}>
-					From: {car.pickupDate}
-					{"\n"}
-					To: {car.returnDate}
-				</Text>
+			{/* Rental Period */}
+			<Text style={styles.sectionHeader}>Rental Period</Text>
+			<Text style={styles.rentalDates}>
+				From: {car.pickupDate}
+				{"\n"}
+				To: {car.returnDate}
+			</Text>
 
-				{/* QR Code */}
-				<QRCode value={`Rental ID: ${car.id}`} size={150} />
+			{/* QR Code */}
+			<QRCode value={`Rental ID: ${car.id}`} size={150} />
 
-				{/* Buttons */}
-				<Pressable
-					style={styles.backButton}
-					onPress={() => router.push("/dashboard")}
-				>
-					<Text style={styles.backButtonText}>Back to Your Cars</Text>
-				</Pressable>
+			{/* Buttons */}
+			<Pressable
+				style={styles.backButton}
+				onPress={() => router.push("/dashboard")}
+			>
+				<Text style={styles.backButtonText}>Back to Your Cars</Text>
+			</Pressable>
 
-				<Pressable style={styles.cancelButton} onPress={handleCancel}>
-					<Text style={styles.cancelButtonText}>Cancel</Text>
-				</Pressable>
-			</ScrollView>
+			<Pressable style={styles.cancelButton} onPress={handleCancel}>
+				<Text style={styles.cancelButtonText}>Cancel</Text>
+			</Pressable>
 		</SafeAreaView>
 	);
 }
@@ -140,13 +104,12 @@ const styles = StyleSheet.create({
 	},
 	carImage: {
 		width: "100%",
-		height: 200,
-		marginBottom: 16,
+		marginVertical: 16,
 	},
 	carName: {
 		fontSize: 24,
 		fontWeight: "bold",
-		color: "#003366",
+		color: "#00246B",
 		textAlign: "center",
 		marginBottom: 16,
 	},
@@ -165,7 +128,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	backButton: {
-		backgroundColor: "#003366",
+		backgroundColor: "#00246B",
 		paddingVertical: 12,
 		paddingHorizontal: 16,
 		borderRadius: 8,
