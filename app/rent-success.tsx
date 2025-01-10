@@ -6,24 +6,23 @@ import {
 	FlatList,
 	Pressable,
 	StyleSheet,
-	ScrollView,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import SafeLayout from "../components/SafeLayout";
 import { exampleData } from "@/data/data";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Car, CarInfo } from "./car-details/[id]";
 
 export default function RentSuccess() {
-	const { carName, startDate, endDate, pricePerDay } = useLocalSearchParams();
+	const rentedCar = useLocalSearchParams() as unknown as Car;
 	const router = useRouter();
 
-	const start = new Date(startDate as string);
-	const end = new Date(endDate as string);
+	const start = new Date(rentedCar.pickupDate as string);
+	const end = new Date(rentedCar.returnDate as string);
 	const rentalDays = Math.ceil(
 		(end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
 	);
-	const totalPrice = rentalDays * Number(pricePerDay);
+	const totalPrice = rentalDays * Number(rentedCar.price);
 
 	const flatFallbackImage = require("../assets/images/flat-fallback.png");
 
@@ -62,105 +61,72 @@ export default function RentSuccess() {
 	);
 
 	return (
-		<SafeAreaView style={{ paddingHorizontal: 16 }}>
-			<ScrollView contentContainerStyle={styles.scrollContent}>
-				{/* Success Message */}
-				<Text style={styles.successHeader}>Success!</Text>
-				<Text style={styles.successMessage}>
-					{carName} has been successfully rented out to you
-				</Text>
+		<SafeAreaView
+			edges={["right", "bottom", "left"]}
+			style={{ paddingHorizontal: 16 }}
+		>
+			{/* Success Message */}
+			<Text style={styles.successHeader}>Success!</Text>
+			<Text style={styles.successMessage}>
+				{rentedCar.name} has been successfully rented out to you
+			</Text>
 
-				{/* Car Details */}
-				<View style={styles.carDetails}>
-					<Text>
-						<FontAwesome5
-							name="map-marker-alt"
-							size={14}
-							color="#003366"
-						/>{" "}
-						Warsaw • 2.5 km
-					</Text>
-					<Text>
-						<FontAwesome5
-							name="calendar"
-							size={14}
-							color="#003366"
-						/>{" "}
-						2018
-					</Text>
-					<Text>
-						<FontAwesome5 name="users" size={14} color="#003366" />{" "}
-						5 Seats
-					</Text>
-					<Text>
-						<FontAwesome5
-							name="door-open"
-							size={14}
-							color="#003366"
-						/>{" "}
-						4 Doors
-					</Text>
-					<Text>
-						<FontAwesome5
-							name="gas-pump"
-							size={14}
-							color="#003366"
-						/>{" "}
-						Diesel
-					</Text>
-					<Text>
-						<FontAwesome5 name="box" size={14} color="#003366" />{" "}
-						320 liters
-					</Text>
-				</View>
+			{/* Car Details */}
+			<CarInfo car={rentedCar} />
 
-				{/* Rental Period */}
-				<Text style={styles.sectionHeader}>Rental Period</Text>
-				<Text style={styles.rentalDates}>
-					From: {start.toLocaleString()}
-					{"\n"}
-					To: {end.toLocaleString()}
-				</Text>
+			{/* Rental Period */}
+			<Text style={styles.sectionHeader}>Rental Period</Text>
+			<Text style={styles.rentalDates}>
+				From:
+				{new Intl.DateTimeFormat("pl-PL", {
+					dateStyle: "short",
+					timeStyle: "short",
+					timeZone: "Europe/Warsaw",
+				}).format(start)}
+			</Text>
+			<Text style={styles.rentalDates}>
+				To:{" "}
+				{new Intl.DateTimeFormat("pl-PL", {
+					dateStyle: "short",
+					timeStyle: "short",
+					timeZone: "Europe/Warsaw",
+				}).format(end)}
+			</Text>
 
-				{/* Total Price */}
-				<Text style={styles.totalPrice}>Total: {totalPrice} zł</Text>
+			{/* Total Price */}
+			<Text style={styles.totalPrice}>Total: {totalPrice} zł</Text>
 
-				{/* Flat Recommendations */}
-				<Text style={styles.recommendationHeader}>
-					You rented a car! Would you also like to rent a flat in the
-					area?
-				</Text>
+			{/* Flat Recommendations */}
+			<Text style={styles.recommendationHeader}>
+				You rented a car! Would you also like to rent a flat in the
+				area?
+			</Text>
 
-				<FlatList
-					data={exampleData.flats}
-					keyExtractor={(item) => item.id.toString()}
-					renderItem={renderFlatItem}
-					horizontal
-					showsHorizontalScrollIndicator
-					contentContainerStyle={styles.flatList}
-				/>
+			<FlatList
+				data={exampleData.flats}
+				keyExtractor={(item) => item.id.toString()}
+				renderItem={renderFlatItem}
+				horizontal
+				showsHorizontalScrollIndicator
+				contentContainerStyle={styles.flatList}
+			/>
 
-				{/* OK Button */}
-				<Pressable
-					style={styles.okButton}
-					onPress={() => router.push("/car-browser")}
-				>
-					<Text style={styles.okButtonText}>OK</Text>
-				</Pressable>
-			</ScrollView>
+			{/* OK Button */}
+			<Pressable
+				style={styles.okButton}
+				onPress={() => router.push("/car-browser")}
+			>
+				<Text style={styles.okButtonText}>OK</Text>
+			</Pressable>
 		</SafeAreaView>
 	);
 }
 
 const styles = StyleSheet.create({
-	scrollContent: {
-		flexGrow: 1,
-		padding: 0,
-	},
 	successHeader: {
 		fontSize: 32,
 		fontWeight: "bold",
-		color: "#003366",
+		color: "#00246B",
 		textAlign: "center",
 		marginBottom: 16,
 	},
@@ -168,7 +134,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		textAlign: "center",
 		marginBottom: 16,
-		color: "#003366",
+		color: "#00246B",
 	},
 	carDetails: {
 		marginBottom: 16,
@@ -186,7 +152,7 @@ const styles = StyleSheet.create({
 	totalPrice: {
 		fontSize: 20,
 		fontWeight: "bold",
-		color: "#003366",
+		color: "#00246B",
 		textAlign: "center",
 		marginVertical: 16,
 	},
@@ -195,7 +161,7 @@ const styles = StyleSheet.create({
 		marginBottom: 16,
 		fontWeight: "bold",
 		textAlign: "center",
-		color: "#003366",
+		color: "#00246B",
 	},
 	flatList: {
 		paddingBottom: 16,
@@ -234,11 +200,11 @@ const styles = StyleSheet.create({
 	},
 	flatPriceText: {
 		fontWeight: "bold",
-		color: "#003366",
+		color: "#00246B",
 		textAlign: "right",
 	},
 	okButton: {
-		backgroundColor: "#003366",
+		backgroundColor: "#00246B",
 		paddingVertical: 12,
 		borderRadius: 8,
 		alignItems: "center",
