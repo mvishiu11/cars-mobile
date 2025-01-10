@@ -10,13 +10,14 @@ import {
 import { useRouter } from "expo-router";
 import { exampleData } from "@/data/data";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Car } from "./car-details/[id]";
 
 export default function Dashboard() {
 	const router = useRouter();
 	const carFallbackImage = require("../assets/images/car-fallback.png");
 	const flatFallbackImage = require("../assets/images/flat-fallback.png");
 
-	const renderCarItem = ({ item }: any) => (
+	const renderCarItem = ({ item }: { item: Car }) => (
 		<Pressable onPress={() => router.push(`/rented-car/${item.id}`)}>
 			<View style={styles.renderCarItem}>
 				<Image
@@ -28,15 +29,19 @@ export default function Dashboard() {
 					<Text style={styles.renderText}>{item.name}</Text>
 					<Text style={{ color: "#666" }}>
 						Pickup:{" "}
-						{new Date(item.pickupDate)
-							.toLocaleString()
-							.slice(0, -3)}
+						{new Intl.DateTimeFormat("pl-PL", {
+							dateStyle: "short",
+							timeStyle: "short",
+							timeZone: "Europe/Warsaw",
+						}).format(new Date(item.pickupDate as string))}
 					</Text>
 					<Text style={{ color: "#666" }}>
 						Return:{" "}
-						{new Date(item.returnDate)
-							.toLocaleString()
-							.slice(0, -3)}
+						{new Intl.DateTimeFormat("pl-PL", {
+							dateStyle: "short",
+							timeStyle: "short",
+							timeZone: "Europe/Warsaw",
+						}).format(new Date(item.returnDate as string))}
 					</Text>
 				</View>
 			</View>
@@ -57,11 +62,19 @@ export default function Dashboard() {
 					<Text style={styles.renderText}>{item.name}</Text>
 					<Text style={{ color: "#666" }}>
 						Check-in:{" "}
-						{new Date(item.startDate).toLocaleString().slice(0, -3)}
+						{new Intl.DateTimeFormat("pl-PL", {
+							dateStyle: "short",
+							timeStyle: "short",
+							timeZone: "Europe/Warsaw",
+						}).format(new Date(item.startDate))}
 					</Text>
 					<Text style={{ color: "#666" }}>
 						Check-out:{" "}
-						{new Date(item.endDate).toLocaleString().slice(0, -3)}
+						{new Intl.DateTimeFormat("pl-PL", {
+							dateStyle: "short",
+							timeStyle: "short",
+							timeZone: "Europe/Warsaw",
+						}).format(new Date(item.endDate))}
 					</Text>
 				</View>
 			</View>
@@ -121,10 +134,10 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		textAlign: "center",
 		marginBottom: 24,
-		color: "#003366",
+		color: "#00246B",
 	},
 	browseButton: {
-		backgroundColor: "#003366",
+		backgroundColor: "#00246B",
 		paddingVertical: 12,
 		paddingHorizontal: 16,
 		borderRadius: 8,
