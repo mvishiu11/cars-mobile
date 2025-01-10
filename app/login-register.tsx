@@ -1,206 +1,128 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Pressable, Image } from "react-native";
+import {
+	View,
+	Text,
+	TextInput,
+	Pressable,
+	Image,
+	StyleSheet,
+	KeyboardAvoidingView,
+	Platform,
+} from "react-native";
+import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function LoginRegisterScreen() {
-	const [activeTab, setActiveTab] = useState<"login" | "register">("login");
+	const [activeTab, setActiveTab] = useState(false);
 	const router = useRouter();
 
-	const TabButton = ({ label, isActive, onPress }: any) => (
-		<Pressable
-			onPress={onPress}
-			style={{
-				flex: 1,
-				alignItems: "center",
-				paddingVertical: 12,
-				borderBottomWidth: 2,
-				borderBottomColor: isActive ? "#003366" : "transparent",
-			}}
-		>
-			<Text
-				style={{
-					color: isActive ? "#003366" : "#888",
-					fontWeight: "bold",
-				}}
-			>
-				{label}
-			</Text>
-		</Pressable>
-	);
-
 	return (
-		<View
-			style={{
-				flex: 1,
-				backgroundColor: "white",
-				paddingHorizontal: 24,
-			}}
-		>
+		<SafeAreaView style={styles.container}>
 			{/* Logo */}
-			<View
-				style={{
-					alignItems: "center",
-					marginTop: 40,
-					marginBottom: 24,
-				}}
-			>
+			<View style={styles.logoContainer}>
 				<Image
 					source={require("../assets/images/logo.png")}
-					style={{ width: 150, height: 150 }}
+					style={styles.logo}
 					resizeMode="contain"
 				/>
 			</View>
 
-			{/* Tabs */}
-			<View
-				style={{
-					flexDirection: "row",
-					borderBottomWidth: 1,
-					borderBottomColor: "#ddd",
-					marginBottom: 16,
-				}}
+			<KeyboardAvoidingView
+				behavior={Platform.OS === "ios" ? "padding" : undefined}
+				style={styles.keyboardAvoidingView}
 			>
-				<TabButton
-					label="Register"
-					isActive={activeTab === "register"}
-					onPress={() => setActiveTab("register")}
+				{/* Tabs */}
+				<SegmentedControl
+					values={["Register", "Login"]}
+					selectedIndex={activeTab ? 1 : 0}
+					appearance="light"
+					onChange={() => setActiveTab(!activeTab)}
+					style={{ marginBottom: 16 }}
 				/>
-				<TabButton
-					label="Login"
-					isActive={activeTab === "login"}
-					onPress={() => setActiveTab("login")}
-				/>
-			</View>
 
-			{/* Tab Content */}
-			{activeTab === "login" && (
-				<View>
-					<Text
-						style={{
-							fontSize: 18,
-							fontWeight: "bold",
-							marginBottom: 8,
-						}}
-					>
-						Login
-					</Text>
-					<Text style={{ color: "#888", marginBottom: 16 }}>
-						Enter your credentials that you used to register.
-					</Text>
-					<TextInput
-						placeholder="Username or Email"
-						style={{
-							backgroundColor: "#f9f9f9",
-							borderColor: "#ddd",
-							borderWidth: 1,
-							borderRadius: 8,
-							padding: 12,
-							marginBottom: 16,
-						}}
-					/>
-					<TextInput
-						placeholder="Password"
-						secureTextEntry
-						style={{
-							backgroundColor: "#f9f9f9",
-							borderColor: "#ddd",
-							borderWidth: 1,
-							borderRadius: 8,
-							padding: 12,
-							marginBottom: 16,
-						}}
-					/>
-					<Pressable
-						style={{
-							backgroundColor: "#003366",
-							paddingVertical: 12,
-							paddingHorizontal: 24,
-							borderRadius: 8,
-							alignItems: "center",
-						}}
-						onPress={() => router.push("/dashboard")}
-					>
-						<Text
-							style={{
-								color: "white",
-								fontWeight: "bold",
-								fontSize: 16,
-							}}
-						>
-							Login
+				{/* Tab Content */}
+				{activeTab ? (
+					<View>
+						<Text style={styles.header}>Login</Text>
+						<Text style={{ color: "#888", marginBottom: 16 }}>
+							Enter your credentials that you used to register.
 						</Text>
-					</Pressable>
-				</View>
-			)}
-			{activeTab === "register" && (
-				<View>
-					<Text
-						style={{
-							fontSize: 18,
-							fontWeight: "bold",
-							marginBottom: 8,
-						}}
-					>
-						Register
-					</Text>
-					<Text style={{ color: "#888", marginBottom: 16 }}>
-						Enter your email address and choose your username.
-					</Text>
-					<TextInput
-						placeholder="Email"
-						style={{
-							backgroundColor: "#f9f9f9",
-							borderColor: "#ddd",
-							borderWidth: 1,
-							borderRadius: 8,
-							padding: 12,
-							marginBottom: 16,
-						}}
-					/>
-					<TextInput
-						placeholder="Username"
-						style={{
-							backgroundColor: "#f9f9f9",
-							borderColor: "#ddd",
-							borderWidth: 1,
-							borderRadius: 8,
-							padding: 12,
-							marginBottom: 16,
-						}}
-					/>
-					<TextInput
-						placeholder="Password"
-						secureTextEntry
-						style={{
-							backgroundColor: "#f9f9f9",
-							borderColor: "#ddd",
-							borderWidth: 1,
-							borderRadius: 8,
-							padding: 12,
-							marginBottom: 16,
-						}}
-					/>
-					<Pressable
-						style={{
-							backgroundColor: "#003366",
-							paddingVertical: 12,
-							paddingHorizontal: 24,
-							borderRadius: 8,
-							alignItems: "center",
-						}}
-					>
-						<Text
-							style={{
-								color: "white",
-								fontWeight: "bold",
-								fontSize: 16,
-							}}
+						<TextInput
+							placeholder="Username or Email"
+							style={styles.input}
+							placeholderTextColor={"#888"}
+						/>
+						<TextInput
+							placeholder="Password"
+							secureTextEntry
+							style={styles.input}
+							placeholderTextColor={"#888"}
+						/>
+						<Pressable
+							style={styles.button}
+							onPress={() => router.push("/dashboard")}
 						>
-							Register
+							<Text style={styles.buttonText}>Login</Text>
+						</Pressable>
+					</View>
+				) : (
+					<View>
+						<Text style={styles.header}>Register</Text>
+						<Text style={{ color: "#888", marginBottom: 16 }}>
+							Enter your email address and choose your username.
 						</Text>
-					</Pressable>
-				</View>
-			)}
-		</View>
+						<TextInput
+							placeholder="Email"
+							style={styles.input}
+							placeholderTextColor={"#888"}
+						/>
+						<TextInput
+							placeholder="Username"
+							style={styles.input}
+							placeholderTextColor={"#888"}
+						/>
+						<TextInput
+							placeholder="Password"
+							secureTextEntry
+							style={styles.input}
+							placeholderTextColor={"#888"}
+						/>
+						<Pressable style={styles.button}>
+							<Text style={styles.buttonText}>Register</Text>
+						</Pressable>
+					</View>
+				)}
+			</KeyboardAvoidingView>
+		</SafeAreaView>
 	);
 }
+
+const styles = StyleSheet.create({
+	container: { flex: 1, paddingHorizontal: 24, backgroundColor: "white" },
+	logoContainer: { alignItems: "center" },
+	logo: { width: 150, height: undefined, aspectRatio: 929 / 347 },
+	keyboardAvoidingView: {
+		flex: 1,
+		justifyContent: "center",
+		marginBottom: 96,
+		backgroundColor: "white",
+	},
+	header: { fontSize: 18, fontWeight: "bold", marginBottom: 8 },
+	button: {
+		backgroundColor: "#00246B",
+		paddingVertical: 12,
+		paddingHorizontal: 24,
+		borderRadius: 8,
+		alignItems: "center",
+	},
+	buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
+	input: {
+		borderWidth: 1,
+		borderColor: "#ddd",
+		borderRadius: 8,
+		padding: 12,
+		marginBottom: 16,
+		backgroundColor: "#f9f9f9",
+	},
+});
