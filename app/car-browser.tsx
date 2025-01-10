@@ -33,13 +33,13 @@ export default function CarBrowser() {
 					{item.distance}
 				</Text>
 				<Text style={styles.carInfo}>
-					<FontAwesome5 name="users" size={14} color="#003366" />{" "}
+					<FontAwesome5 name="users" size={14} color="#00246B" />{" "}
 					{item.seats} Seats
 				</Text>
 			</View>
 			<View style={styles.carPrice}>
 				<Text style={styles.priceText}>
-					<FontAwesome5 name="money-bill" size={14} color="#003366" />{" "}
+					<FontAwesome5 name="money-bill" size={14} color="#00246B" />{" "}
 					{item.price} zł / day
 				</Text>
 			</View>
@@ -74,5 +74,5 @@ const styles = StyleSheet.create({
 	carName: { fontWeight: "bold", fontSize: 16 },
 	carInfo: { color: "#666", marginBottom: 4 },
 	carPrice: { alignItems: "flex-end" },
-	priceText: { fontWeight: "bold", color: "#003366" },
+	priceText: { fontWeight: "bold", color: "#00246B" },
 });
