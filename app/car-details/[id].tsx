@@ -1,37 +1,77 @@
 import React, { useRef, useState } from "react";
-import {
-	View,
-	Text,
-	Image,
-	Pressable,
-	StyleSheet,
-	ScrollView,
-	Modal,
-	Button,
-	Platform,
-} from "react-native";
+import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Checkbox from "expo-checkbox";
-import DateTimePicker from "@react-native-community/datetimepicker";
 
 import Toast from "react-native-toast-message";
 import { exampleData } from "@/data/data";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import DateTimeSelector, {
+	getNextAvailableDate,
+} from "@/components/DateTimeSelector";
+
+export type Fuel = "Gasoline" | "Diesel" | "Electric" | "Hybrid";
+
+export interface Car {
+	id: number;
+	name: string;
+	image: null;
+	location: string;
+	distance: number;
+	seats: number;
+	price: number;
+	year: number;
+	doors: number;
+	fuel: Fuel;
+	capacity: number;
+}
+
+export const CarInfo = ({ car }: { car: Car }) => {
+	return (
+		<View style={styles.carInfo}>
+			<View style={{ flexGrow: 1 }}>
+				<Text>
+					<FontAwesome5
+						name="map-marker-alt"
+						size={14}
+						color="#00246B"
+					/>{" "}
+					{car.location} • {car.distance} km
+				</Text>
+				<Text>
+					<FontAwesome5 name="users" size={14} color="#00246B" />{" "}
+					{car.seats} Seats
+				</Text>
+				<Text>
+					<FontAwesome5 name="gas-pump" size={14} color="#00246B" />{" "}
+					{car.fuel}
+				</Text>
+			</View>
+			<View style={{ flexGrow: 1 }}>
+				<Text>
+					<FontAwesome5 name="calendar" size={14} color="#00246B" />{" "}
+					{car.year}
+				</Text>
+				<Text>
+					<FontAwesome5 name="door-open" size={14} color="#00246B" />{" "}
+					{car.doors} Doors
+				</Text>
+				<Text>
+					<FontAwesome5 name="box" size={14} color="#00246B" />{" "}
+					{car.capacity} liters
+				</Text>
+			</View>
+		</View>
+	);
+};
 
 export default function CarDetails() {
 	const { id } = useLocalSearchParams();
-	const car = exampleData.cars.find((car) => car.id === Number(id));
+	const car = exampleData.cars.find((car) => car.id === Number(id)) as Car;
 	const [termsAccepted, setTermsAccepted] = useState(false);
 
-	let nextAvailableDate = new Date();
-	if (nextAvailableDate.getMinutes() % 15 !== 0) {
-		nextAvailableDate.setMinutes(
-			nextAvailableDate.getMinutes() +
-				15 -
-				(nextAvailableDate.getMinutes() % 15)
-		);
-	}
+	const nextAvailableDate = getNextAvailableDate();
 
 	const [pickupDate, setPickupDate] = useState(nextAvailableDate);
 	const [isPickupDateModalOpen, setPickupDateModalOpen] = useState(false);
@@ -39,7 +79,6 @@ export default function CarDetails() {
 	const [returnDate, setReturnDate] = useState(nextAvailableDate);
 	const [isReturnDateModalOpen, setReturnDateModalOpen] = useState(false);
 	const [isReturnTimeModalOpen, setReturnTimeModalOpen] = useState(false);
-	const dateRef = useRef(new Date());
 	const router = useRouter();
 
 	if (!car) {
@@ -641,7 +680,7 @@ const styles = StyleSheet.create({
 		color: "#333",
 	},
 	rentButton: {
-		backgroundColor: "#003366",
+		backgroundColor: "#00246B",
 		paddingVertical: 16,
 		borderRadius: 8,
 	},
