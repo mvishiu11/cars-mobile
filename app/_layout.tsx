@@ -3,9 +3,9 @@ import { UserProvider } from "../context/UserContext";
 import Header from "@/components/Header";
 import { Drawer } from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
-import Toast from "react-native-toast-message";
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import SidebarLayout from "@/components/SidebarLayout";
 
 const theme = {
 	colors: {
@@ -41,6 +41,7 @@ export default function Layout() {
 						drawerHideStatusBarOnOpen: true,
 						header: (props) => <Header {...props} />,
 					}}
+					drawerContent={(props) => <SidebarLayout {...props} />}
 				>
 					<Drawer.Screen
 						name="dashboard"
