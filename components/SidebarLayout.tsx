@@ -10,9 +10,11 @@ import {
 import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { exampleData } from "@/data/data";
+import { useRouter } from "expo-router";
 
 export default function Sidebar(props: any) {
   const screenHeight = Dimensions.get("window").height;
+  const router = useRouter()
 
   return (
     <DrawerContentScrollView {...props}>
@@ -33,7 +35,7 @@ export default function Sidebar(props: any) {
           style={[styles.iconButton, styles.logoutButton]}
           onPress={() => {
             console.log("Logged out");
-            props.navigation.navigate("/login-register");
+            router.replace("/login-register");
           }}
         >
           <FontAwesome5 name="sign-out-alt" size={18} color="#fff" />
