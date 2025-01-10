@@ -8,12 +8,10 @@ import {
 	StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 
 export default function WelcomeScreen() {
 	const router = useRouter();
-	const navigation = useNavigation();
 
 	return (
 		<View style={styles.mainContainer}>
@@ -57,7 +55,7 @@ const styles = StyleSheet.create({
 	logo: { width: 150 },
 	buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
 	button: {
-		backgroundColor: "#003366",
+		backgroundColor: "#00246B",
 		paddingVertical: 12,
 		paddingHorizontal: 24,
 		borderRadius: 8,
