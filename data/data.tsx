@@ -1,3 +1,5 @@
+import { Car } from "@/app/car-details/[id]";
+
 export const exampleData = {
 	username: "JohnDoe",
 	rentedCars: [
@@ -16,7 +18,7 @@ export const exampleData = {
 			pickupDate: "2024-11-30T10:00:00.000Z",
 			returnDate: "2024-12-07T18:45:00.000Z",
 		},
-	],
+	] as Car[],
 	rentedFlats: [
 		{
 			id: 1,
