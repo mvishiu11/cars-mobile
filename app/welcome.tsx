@@ -8,7 +8,6 @@ import {
 	StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useNavigation } from "@react-navigation/native";
 
 export default function WelcomeScreen() {
 	const router = useRouter();
