@@ -8,6 +8,8 @@ import {
 	StyleSheet,
 	KeyboardAvoidingView,
 	Platform,
+	Keyboard,
+	TouchableWithoutFeedback,
 } from "react-native";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import { useRouter } from "expo-router";
@@ -22,78 +24,87 @@ export default function LoginRegisterScreen() {
 			{/* Logo */}
 			<View style={styles.logoContainer}>
 				<Image
-					source={require("../assets/images/logo.png")}
+					source={require("@/assets/images/logo.png")}
 					style={styles.logo}
 					resizeMode="contain"
 				/>
 			</View>
-
-			<KeyboardAvoidingView
-				behavior={Platform.OS === "ios" ? "padding" : undefined}
-				style={styles.keyboardAvoidingView}
-			>
-				{/* Tabs */}
-				<SegmentedControl
-					values={["Register", "Login"]}
-					selectedIndex={activeTab ? 1 : 0}
-					appearance="light"
-					onChange={() => setActiveTab(!activeTab)}
-					style={{ marginBottom: 16 }}
-				/>
-
-				{/* Tab Content */}
-				{activeTab ? (
-					<View>
-						<Text style={styles.header}>Login</Text>
-						<Text style={{ color: "#888", marginBottom: 16 }}>
-							Enter your credentials that you used to register.
-						</Text>
-						<TextInput
-							placeholder="Username or Email"
-							style={styles.input}
-							placeholderTextColor={"#888"}
-						/>
-						<TextInput
-							placeholder="Password"
-							secureTextEntry
-							style={styles.input}
-							placeholderTextColor={"#888"}
-						/>
-						<Pressable
-							style={styles.button}
-							onPress={() => router.push("/dashboard")}
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+				<KeyboardAvoidingView
+					behavior={Platform.OS === "ios" ? "padding" : "height"}
+					style={styles.keyboardAvoidingView}
+				>
+					{/* Tabs */}
+					<SegmentedControl
+						values={["Register", "Login"]}
+						selectedIndex={activeTab ? 1 : 0}
+						appearance="light"
+						onChange={() => setActiveTab(!activeTab)}
+						style={{ marginBottom: 16 }}
+					/>
+					{/* Tab Content */}
+					{activeTab ? (
+						<View
+							style={{
+								paddingBottom: 59,
+							}}
 						>
-							<Text style={styles.buttonText}>Login</Text>
-						</Pressable>
-					</View>
-				) : (
-					<View>
-						<Text style={styles.header}>Register</Text>
-						<Text style={{ color: "#888", marginBottom: 16 }}>
-							Enter your email address and choose your username.
-						</Text>
-						<TextInput
-							placeholder="Email"
-							style={styles.input}
-							placeholderTextColor={"#888"}
-						/>
-						<TextInput
-							placeholder="Username"
-							style={styles.input}
-							placeholderTextColor={"#888"}
-						/>
-						<TextInput
-							placeholder="Password"
-							secureTextEntry
-							style={styles.input}
-							placeholderTextColor={"#888"}
-						/>
-						<Pressable style={styles.button}>
-							<Text style={styles.buttonText}>Register</Text>
-						</Pressable>
-					</View>
-				)}
-			</KeyboardAvoidingView>
+							<Text style={styles.header}>Login</Text>
+							<Text style={{ color: "#888", marginBottom: 16 }}>
+								Enter your credentials that you used to
+								register.
+							</Text>
+							<TextInput
+								placeholder="Username or Email"
+								style={styles.input}
+								placeholderTextColor={"#888"}
+							/>
+							<TextInput
+								placeholder="Password"
+								secureTextEntry
+								style={styles.input}
+								placeholderTextColor={"#888"}
+							/>
+							<Pressable
+								style={styles.button}
+								onPress={() => router.push("/dashboard")}
+							>
+								<Text style={styles.buttonText}>Login</Text>
+							</Pressable>
+						</View>
+					) : (
+						<View>
+							<Text style={styles.header}>Register</Text>
+							<Text style={{ color: "#888", marginBottom: 16 }}>
+								Enter your email address and choose your
+								username.
+							</Text>
+							<TextInput
+								placeholder="Email"
+								style={styles.input}
+								placeholderTextColor={"#888"}
+							/>
+							<TextInput
+								placeholder="Username"
+								style={styles.input}
+								placeholderTextColor={"#888"}
+							/>
+							<TextInput
+								placeholder="Password"
+								secureTextEntry
+								style={styles.input}
+								placeholderTextColor={"#888"}
+							/>
+							<Pressable
+								style={styles.button}
+								onPress={() => router.push("/dashboard")}
+							>
+								<Text style={styles.buttonText}>Register</Text>
+							</Pressable>
+						</View>
+					)}
+				</KeyboardAvoidingView>
+			</TouchableWithoutFeedback>
 		</SafeAreaView>
 	);
 }
@@ -105,7 +116,6 @@ const styles = StyleSheet.create({
 	keyboardAvoidingView: {
 		flex: 1,
 		justifyContent: "center",
-		marginBottom: 96,
 		backgroundColor: "white",
 	},
 	header: { fontSize: 18, fontWeight: "bold", marginBottom: 8 },
