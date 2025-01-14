@@ -3,43 +3,54 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import {
 	DrawerContentComponentProps,
 	DrawerItemList,
+	useDrawerStatus,
 } from "@react-navigation/drawer";
 import { router } from "expo-router";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+	Image,
+	Platform,
+	Pressable,
+	StyleSheet,
+	Text,
+	View,
+} from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+	const isDrawerOpen = useDrawerStatus() === "open";
 	return (
-		<SafeAreaProvider>
-			<SafeAreaView style={{ flex: 1 }}>
-				<View style={styles.container}>
-					<View style={styles.userInfo}>
-						<Image
-							source={require("@/assets/images/adaptive-icon.png")}
-							resizeMode="contain"
-							style={styles.avatar}
-						/>
-						<Text style={styles.username}>
-							{exampleData.username}
-						</Text>
-					</View>
-					<DrawerItemList {...props} />
-					<View style={styles.footer}>
-						<Pressable
-							onPress={() => router.push("/login-register")}
-							style={styles.logoutButton}
-						>
-							<FontAwesome5
-								name="sign-out-alt"
-								size={24}
-								color="#fff"
+		(isDrawerOpen || Platform.OS !== "android") && (
+			<SafeAreaProvider>
+				<SafeAreaView style={{ flex: 1 }}>
+					<View style={styles.container}>
+						<View style={styles.userInfo}>
+							<Image
+								source={require("@/assets/images/adaptive-icon.png")}
+								resizeMode="contain"
+								style={styles.avatar}
 							/>
-							<Text style={styles.buttonText}>Log Out</Text>
-						</Pressable>
+							<Text style={styles.username}>
+								{exampleData.username}
+							</Text>
+						</View>
+						<DrawerItemList {...props} />
+						<View style={styles.footer}>
+							<Pressable
+								onPress={() => router.push("/login-register")}
+								style={styles.logoutButton}
+							>
+								<FontAwesome5
+									name="sign-out-alt"
+									size={24}
+									color="#fff"
+								/>
+								<Text style={styles.buttonText}>Log Out</Text>
+							</Pressable>
+						</View>
 					</View>
-				</View>
-			</SafeAreaView>
-		</SafeAreaProvider>
+				</SafeAreaView>
+			</SafeAreaProvider>
+		)
 	);
 };
 export default CustomDrawerContent;
