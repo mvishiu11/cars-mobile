@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	View,
 	Text,
@@ -6,17 +6,28 @@ import {
 	Image,
 	Pressable,
 	StyleSheet,
+	TextInput,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { exampleData } from "@/data/data";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Car } from "./car-details/[id]";
+import CarBrowserFilter from "@/components/CarBrowserFilter";
 
 export default function CarBrowser() {
+	const [isFilterOpen, setIsFilterOpen] = useState(false);
+	const [query, setQuery] = useState("");
+	const [sortBy, setSortBy] = useState(0);
+	const [availableFrom, setAvailableFrom] = useState(new Date());
+	const [availableTo, setAvailableTo] = useState(new Date());
+	const [minPrice, setMinPrice] = useState(300);
+	const [maxPrice, setMaxPrice] = useState(700);
+	const [searchRadius, setSearchRadius] = useState(2500);
 	const router = useRouter();
 	const carFallbackImage = require("../assets/images/car-fallback.png");
 
-	const renderCarItem = ({ item }: any) => (
+	const renderCarItem = ({ item }: { item: Car }) => (
 		<Pressable
 			style={styles.card}
 			onPress={() => router.push(`/car-details/${item.id}`)}
@@ -24,12 +35,18 @@ export default function CarBrowser() {
 			<Image
 				source={item.image ? { uri: item.image } : carFallbackImage}
 				style={styles.carImage}
-				resizeMode="cover"
+				resizeMode="contain"
 			/>
 			<View style={styles.carDetails}>
 				<Text style={styles.carName}>{item.name}</Text>
 				<Text style={styles.carInfo}>
-					<FontAwesome5 name="map-marker-alt" /> {item.location} •{" "}
+					<FontAwesome5
+						name="map-marker-alt"
+						size={14}
+						color="#00246B"
+					/>{" "}
+					{item.location}
+					{" • "}
 					{item.distance}
 				</Text>
 				<Text style={styles.carInfo}>
@@ -38,41 +55,126 @@ export default function CarBrowser() {
 				</Text>
 			</View>
 			<View style={styles.carPrice}>
-				<Text style={styles.priceText}>
-					<FontAwesome5 name="money-bill" size={14} color="#00246B" />{" "}
-					{item.price} zł / day
-				</Text>
+				<FontAwesome5 name="money-bill" size={20} color="#044EEB" />
+				<Text style={styles.priceText}>{item.price} zł / day</Text>
 			</View>
 		</Pressable>
 	);
 
 	return (
-		<SafeAreaView style={{ paddingHorizontal: 16 }}>
+		<SafeAreaView
+			edges={["bottom"]}
+			style={{ flex: 1, paddingHorizontal: 16 }}
+		>
 			<Text style={styles.header}>Browse Cars</Text>
-			<FlatList
-				data={exampleData.cars}
-				keyExtractor={(item) => item.id.toString()}
-				renderItem={renderCarItem}
-				contentContainerStyle={styles.carList}
-				showsVerticalScrollIndicator={false}
-			/>
+			<View style={{ flexDirection: "row", gap: 8 }}>
+				<TextInput
+					style={styles.input}
+					placeholder="Porsche 911"
+					placeholderTextColor="#888"
+					onChange={(e) => setQuery(e.nativeEvent.text)}
+				/>
+
+				<Pressable
+					style={{
+						padding: 12,
+						backgroundColor: "#00246B",
+						borderRadius: 8,
+						alignItems: "center",
+						justifyContent: "center",
+						height: 42,
+						width: 42,
+					}}
+					onPress={() => {
+						if (query.length > 2) alert("Search for: " + query);
+					}}
+				>
+					<FontAwesome5 name="search" size={16} color="#fff" />
+				</Pressable>
+				<Pressable
+					style={{
+						borderWidth: 1,
+						borderColor: "#ddd",
+						backgroundColor: "#fff",
+						padding: 8,
+						borderRadius: 8,
+						alignItems: "center",
+						justifyContent: "center",
+						height: 42,
+						width: 42,
+					}}
+					onPress={() => setIsFilterOpen(!isFilterOpen)}
+				>
+					<FontAwesome5 name="filter" size={16} color="#00246B" />
+				</Pressable>
+			</View>
+			{isFilterOpen ? (
+				<CarBrowserFilter
+					sortBy={sortBy}
+					setSortBy={setSortBy}
+					availableFrom={availableFrom}
+					setAvailableFrom={setAvailableFrom}
+					availableTo={availableTo}
+					setAvailableTo={setAvailableTo}
+					minPrice={minPrice}
+					setMinPrice={setMinPrice}
+					maxPrice={maxPrice}
+					setMaxPrice={setMaxPrice}
+					searchRadius={searchRadius}
+					setSearchRadius={setSearchRadius}
+				/>
+			) : (
+				<FlatList
+					data={exampleData.cars}
+					keyExtractor={(item) => item.id.toString()}
+					renderItem={renderCarItem}
+					contentContainerStyle={styles.carList}
+					showsVerticalScrollIndicator={false}
+				/>
+			)}
 		</SafeAreaView>
 	);
 }
 
 const styles = StyleSheet.create({
-	header: { fontSize: 24, fontWeight: "bold", marginBottom: 16 },
-	carList: { paddingBottom: 16 },
+	header: {
+		fontSize: 24,
+		fontWeight: "bold",
+		marginVertical: 16,
+		color: "#00246B",
+	},
+	carList: {},
+	input: {
+		flex: 1,
+		borderWidth: 1,
+		borderColor: "#ddd",
+		borderRadius: 8,
+		padding: 12,
+		marginBottom: 16,
+		backgroundColor: "#fff",
+	},
 	card: {
 		flexDirection: "row",
-		alignItems: "center",
+		backgroundColor: "#fff",
 		padding: 16,
+		borderRadius: 8,
 		marginBottom: 16,
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 2,
 	},
 	carImage: { width: 60, height: 60, borderRadius: 8, marginRight: 12 },
 	carDetails: { flex: 1 },
-	carName: { fontWeight: "bold", fontSize: 16 },
+	carName: { fontWeight: "bold", fontSize: 16, color: "#044EEB" },
 	carInfo: { color: "#666", marginBottom: 4 },
-	carPrice: { alignItems: "flex-end" },
+	carPrice: {
+		alignItems: "center",
+		justifyContent: "center",
+		flexDirection: "row",
+		alignSelf: "flex-end",
+		gap: 8,
+	},
 	priceText: { fontWeight: "bold", color: "#00246B" },
 });
