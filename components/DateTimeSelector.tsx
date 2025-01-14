@@ -28,9 +28,9 @@ export interface DateTimeSelectorProps {
 	dateTime: Date;
 	setDateTime: (date: Date) => void;
 	isDateModalOpen: boolean;
-	setDateModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	setDateModalOpen: (isDateModalOpen: boolean) => void;
 	isTimeModalOpen: boolean;
-	setTimeModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	setTimeModalOpen: (isTimeModalOpen: boolean) => void;
 }
 
 const DateTimeSelector = ({
