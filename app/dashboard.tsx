@@ -82,7 +82,7 @@ export default function Dashboard() {
 	);
 
 	return (
-		<SafeAreaView style={{ paddingHorizontal: 16 }}>
+		<SafeAreaView edges={["bottom"]} style={{ paddingHorizontal: 16 }}>
 			<Text style={styles.welcomeText}>
 				Welcome, {exampleData.username}
 			</Text>
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 		fontWeight: "bold",
 		textAlign: "center",
-		marginBottom: 24,
+		marginVertical: 24,
 		color: "#00246B",
 	},
 	browseButton: {
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
 	},
 	renderCarItem: {
 		flexDirection: "row",
-		backgroundColor: "#f9f9f9",
+		backgroundColor: "#fff",
 		padding: 16,
 		borderRadius: 8,
 		marginBottom: 16,
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
 	},
 	renderFlatItem: {
 		flexDirection: "row",
-		backgroundColor: "#f9f9f9",
+		backgroundColor: "#fff",
 		padding: 16,
 		borderRadius: 8,
 		marginBottom: 16,
