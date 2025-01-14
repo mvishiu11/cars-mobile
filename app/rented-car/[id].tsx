@@ -39,15 +39,15 @@ export default function RentedCar() {
 							(c) => c.id !== car.id
 						);
 						router.push("/dashboard");
+						Toast.show({
+							type: "success",
+							text1: "Rental Canceled",
+							text2: `${car.name} has been removed from your rented cars. 🚗`,
+						});
 					},
 				},
 			]
 		);
-		Toast.show({
-			type: "success",
-			text1: "Rental Canceled",
-			text2: `${car.name} has been removed from your rented cars. 🚗`,
-		});
 	};
 
 	return (
