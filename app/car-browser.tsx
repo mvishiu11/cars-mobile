@@ -145,7 +145,11 @@ export default function CarBrowser() {
 					}}
 					onPress={() => setIsFilterOpen(!isFilterOpen)}
 				>
-					<FontAwesome5 name="filter" size={16} color="#00246B" />
+					<FontAwesome5
+						name={isFilterOpen ? "times" : "filter"}
+						size={16}
+						color="#00246B"
+					/>
 				</Pressable>
 			</View>
 			{isFilterOpen ? (
