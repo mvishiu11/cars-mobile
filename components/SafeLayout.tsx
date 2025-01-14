@@ -4,7 +4,7 @@ import { useRouter, useSegments } from 'expo-router'
 import { useNavigation, DrawerActions } from '@react-navigation/native'
 import { UserContext } from '../context/UserContext'
 import { FontAwesome5 } from '@expo/vector-icons'
-import Sidebar from './Sidebar'
+import Sidebar from './SidebarLayout'
 
 export default function SafeLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
