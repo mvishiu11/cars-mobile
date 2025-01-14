@@ -14,18 +14,40 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Car } from "./car-details/[id]";
 import CarBrowserFilter from "@/components/CarBrowserFilter";
+import { getNextAvailableDate } from "@/components/DateTimeSelector";
 
 export default function CarBrowser() {
+	const nextAvailableDate = getNextAvailableDate();
+
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 	const [query, setQuery] = useState("");
 	const [sortBy, setSortBy] = useState(0);
-	const [availableFrom, setAvailableFrom] = useState(new Date());
-	const [availableTo, setAvailableTo] = useState(new Date());
+	const [availableFrom, setAvailableFrom] = useState(nextAvailableDate);
+	const [availableTo, setAvailableTo] = useState(nextAvailableDate);
 	const [minPrice, setMinPrice] = useState(300);
 	const [maxPrice, setMaxPrice] = useState(700);
 	const [searchRadius, setSearchRadius] = useState(2500);
 	const router = useRouter();
 	const carFallbackImage = require("../assets/images/car-fallback.png");
+
+	const filters = {
+		sortBy,
+		availableFrom,
+		availableTo,
+		minPrice,
+		maxPrice,
+		searchRadius,
+	};
+	const sortCategories = ["Newest ☆", "Popularity ♡", "Price ⭣", "Price ⭡"];
+
+	const defaultFilters = {
+		sortBy: 0,
+		availableFrom: nextAvailableDate,
+		availableTo: nextAvailableDate,
+		minPrice: 300,
+		maxPrice: 700,
+		searchRadius: 2500,
+	};
 
 	const renderCarItem = ({ item }: { item: Car }) => (
 		<Pressable
@@ -86,7 +108,25 @@ export default function CarBrowser() {
 						width: 42,
 					}}
 					onPress={() => {
-						if (query.length > 2) alert("Search for: " + query);
+						if (query.length > 2 || filters !== defaultFilters)
+							alert(
+								`Searching for \"${query}\" with filters \nSort by: ${sortCategories[filters.sortBy]}\nFrom: ${new Intl.DateTimeFormat(
+									"pl-PL",
+									{
+										dateStyle: "short",
+										timeStyle: "short",
+										timeZone: "Europe/Warsaw",
+									}
+								).format(
+									filters.availableFrom
+								)}\nTo: ${new Intl.DateTimeFormat("pl-PL", {
+									dateStyle: "short",
+									timeStyle: "short",
+									timeZone: "Europe/Warsaw",
+								}).format(
+									filters.availableTo
+								)}\nPrice: ${filters.minPrice} zł - ${filters.maxPrice} zł\nRadius: ${filters.searchRadius / 1000} km`
+							);
 					}}
 				>
 					<FontAwesome5 name="search" size={16} color="#fff" />
