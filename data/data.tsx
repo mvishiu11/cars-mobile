@@ -59,7 +59,7 @@ export const exampleData = {
 			fuel: "Petrol",
 			capacity: 250,
 		},
-	],
+	] as Car[],
 	flats: [
 		{
 			id: 1,
