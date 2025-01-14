@@ -1,9 +1,6 @@
-import { UserContext } from "@/context/UserContext";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { DrawerHeaderProps } from "@react-navigation/drawer";
-import { useNavigation } from "@react-navigation/native";
 import { useRouter, useSegments } from "expo-router";
-import { useContext } from "react";
 import { View, Pressable, Image, StyleSheet } from "react-native";
 
 const Header = (props: DrawerHeaderProps) => {
