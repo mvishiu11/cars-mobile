@@ -11,7 +11,9 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { exampleData } from "@/data/data";
 import Toast from "react-native-toast-message";
-import DateTimeSelector, { getNextAvailableDate } from "@/components/DateTimeSelector";
+import DateTimeSelector, {
+	getNextAvailableDate,
+} from "@/components/DateTimeSelector";
 import Checkbox from "expo-checkbox";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -33,17 +35,34 @@ export const FlatInfo = ({ flat }: { flat: Flat }) => {
 		<View style={styles.flatInfo}>
 			<View style={{ flexGrow: 1 }}>
 				<Text>
-					<FontAwesome5 name="bed" size={14} color="#003366" /> {flat.bedrooms} Bedrooms
+					<FontAwesome5 name="bed" size={14} color="#00246B" />{" "}
+					{flat.bedrooms} Bedrooms
 				</Text>
 				<Text>
-					<FontAwesome5 name="bath" size={14} color="#003366" /> {flat.bathrooms} Bathrooms
+					<FontAwesome5 name="bath" size={14} color="#00246B" />{" "}
+					{flat.bathrooms} Bathrooms
 				</Text>
 			</View>
 			<View style={{ flexGrow: 1 }}>
-				<Pressable onPress={() => openGoogleMaps(flat.location)}>
-					<Text style={styles.googleMapsText}>
-						<FontAwesome5 name="map-marker-alt" size={14} color="#003366" /> Google Maps
-					</Text>
+				<Pressable
+					onPress={() => openGoogleMaps(flat.location)}
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						gap: 4,
+					}}
+				>
+					<FontAwesome5
+						name="map-marker-alt"
+						size={14}
+						color="#00246B"
+					/>
+					<Text style={styles.googleMapsText}>Google Maps</Text>
+					<FontAwesome5
+						name="external-link-alt"
+						size={14}
+						color="#044eeb"
+					/>
 				</Pressable>
 			</View>
 		</View>
@@ -60,7 +79,9 @@ const openGoogleMaps = (location: string) => {
 export default function FlatDetails() {
 	const { id } = useLocalSearchParams();
 	const router = useRouter();
-	const flat = exampleData.flats.find((flat) => flat.id === Number(id)) as Flat;
+	const flat = exampleData.flats.find(
+		(flat) => flat.id === Number(id)
+	) as Flat;
 
 	const nextAvailableDate = getNextAvailableDate();
 	const [startDate, setStartDate] = useState(nextAvailableDate);
@@ -91,12 +112,13 @@ export default function FlatDetails() {
 			return;
 		}
 
+		exampleData.rentedFlats = exampleData.rentedFlats || [];
 		const rentedFlat = {
 			...flat,
+			id: exampleData.rentedFlats.length + 1,
 			startDate: startDate.toISOString(),
 			endDate: endDate.toISOString(),
 		};
-		exampleData.rentedFlats = exampleData.rentedFlats || [];
 		exampleData.rentedFlats.push(rentedFlat);
 
 		Toast.show({
@@ -146,8 +168,8 @@ export default function FlatDetails() {
 				<Checkbox
 					value={termsAccepted}
 					onValueChange={() => setTermsAccepted(!termsAccepted)}
-					style={{ borderColor: "#003366" }}
-					color="#003366"
+					style={{ borderColor: "#00246B" }}
+					color="#00246B"
 				/>
 				<Text
 					onPress={() => setTermsAccepted(!termsAccepted)}
@@ -168,8 +190,6 @@ export default function FlatDetails() {
 			>
 				<Text style={styles.rentButtonText}>Rent via Flatly</Text>
 			</Pressable>
-
-			<Toast />
 		</SafeAreaView>
 	);
 }
@@ -189,14 +209,14 @@ const styles = StyleSheet.create({
 	flatName: {
 		fontSize: 24,
 		fontWeight: "bold",
-		color: "#003366",
+		color: "#00246B",
 		textAlign: "center",
 		marginBottom: 16,
 	},
 	flatPrice: {
 		fontSize: 18,
 		fontWeight: "bold",
-		color: "#003366",
+		color: "#00246B",
 		marginBottom: 16,
 		textAlign: "center",
 	},
@@ -205,9 +225,9 @@ const styles = StyleSheet.create({
 		marginBottom: 16,
 	},
 	googleMapsText: {
-		color: "#007BFF",
+		color: "#044eeb",
 		fontWeight: "bold",
-		textDecorationLine: "underline",
+		//textDecorationLine: "underline",
 	},
 	sectionHeader: {
 		fontWeight: "bold",
@@ -226,7 +246,7 @@ const styles = StyleSheet.create({
 		color: "#333",
 	},
 	rentButton: {
-		backgroundColor: "#003366",
+		backgroundColor: "#00246B",
 		paddingVertical: 16,
 		borderRadius: 8,
 		alignItems: "center",
