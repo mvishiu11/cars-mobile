@@ -24,11 +24,6 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 				<SafeAreaView style={{ flex: 1 }}>
 					<View style={styles.container}>
 						<View style={styles.userInfo}>
-							<Image
-								source={require("@/assets/images/adaptive-icon.png")}
-								resizeMode="contain"
-								style={styles.avatar}
-							/>
 							<Text style={styles.username}>
 								{exampleData.username}
 							</Text>
