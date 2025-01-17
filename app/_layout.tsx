@@ -114,12 +114,25 @@ export default function Layout() {
 						}}
 					/>
 					<Drawer.Screen
+						name="flat-browser"
+						options={{
+							drawerLabel: "Flat Browser",
+							drawerIcon: ({ color, size }) => (
+								<FontAwesome5
+									name="house-user"
+									size={size}
+									color={color}
+								/>
+							),
+						}}
+					/>
+					<Drawer.Screen
 						name="settings"
 						options={{
 							drawerLabel: "Settings",
 							drawerIcon: ({ color, size }) => (
-								<FontAwesome6
-									name="gear"
+								<FontAwesome5
+									name="cog"
 									size={size}
 									color={color}
 								/>
