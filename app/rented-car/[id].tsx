@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Image, Pressable, StyleSheet, Alert } from "react-native";
+import { Text, Image, Pressable, StyleSheet, Alert, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import QRCode from "react-native-qrcode-svg";
 import { exampleData } from "@/data/data";
@@ -52,7 +52,11 @@ export default function RentedCar() {
 
 	return (
 		<SafeAreaView
-			style={{ paddingHorizontal: 16, alignItems: "center" }}
+			style={{
+				paddingHorizontal: 16,
+				alignItems: "center",
+				flex: 1,
+			}}
 			edges={["right", "bottom", "left"]}
 		>
 			{/* Car Image */}
@@ -72,26 +76,46 @@ export default function RentedCar() {
 
 			{/* Rental Period */}
 			<Text style={styles.sectionHeader}>Rental Period</Text>
-			<Text style={styles.rentalDates}>
-				From: {car.pickupDate}
-				{"\n"}
-				To: {car.returnDate}
+			<Text>
+				{`From: ${new Intl.DateTimeFormat("pl-PL", {
+					dateStyle: "short",
+					timeStyle: "short",
+					timeZone: "Europe/Warsaw",
+				}).format(new Date(car.pickupDate as string))}`}
 			</Text>
-
+			<Text>
+				{`To: ${new Intl.DateTimeFormat("pl-PL", {
+					dateStyle: "short",
+					timeStyle: "short",
+					timeZone: "Europe/Warsaw",
+				}).format(new Date(car.returnDate as string))}`}
+			</Text>
 			{/* QR Code */}
-			<QRCode value={`Rental ID: ${car.id}`} size={150} />
+			<View style={{ flex: 2, justifyContent: "center" }}>
+				<QRCode value={`Rental ID: ${car.id}`} size={150} />
+			</View>
 
 			{/* Buttons */}
-			<Pressable
-				style={styles.backButton}
-				onPress={() => router.push("/dashboard")}
+			<View
+				style={{
+					flex: 1,
+					flexDirection: "row",
+					//width: "100%",
+					gap: 32,
+					alignItems: "flex-start",
+					justifyContent: "space-evenly",
+				}}
 			>
-				<Text style={styles.backButtonText}>Back to Your Cars</Text>
-			</Pressable>
-
-			<Pressable style={styles.cancelButton} onPress={handleCancel}>
-				<Text style={styles.cancelButtonText}>Cancel</Text>
-			</Pressable>
+				<Pressable
+					style={styles.backButton}
+					onPress={() => router.push("/dashboard")}
+				>
+					<Text style={styles.backButtonText}>Back to Your Cars</Text>
+				</Pressable>
+				<Pressable style={styles.cancelButton} onPress={handleCancel}>
+					<Text style={styles.cancelButtonText}>Cancel</Text>
+				</Pressable>
+			</View>
 		</SafeAreaView>
 	);
 }
@@ -128,6 +152,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	backButton: {
+		flex: 1,
 		backgroundColor: "#00246B",
 		paddingVertical: 12,
 		paddingHorizontal: 16,
@@ -140,7 +165,8 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	cancelButton: {
-		backgroundColor: "#FF4D4D",
+		flex: 1,
+		backgroundColor: "#EB044E",
 		paddingVertical: 12,
 		paddingHorizontal: 16,
 		borderRadius: 8,
