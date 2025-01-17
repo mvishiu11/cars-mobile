@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	View,
 	Text,
@@ -6,14 +6,19 @@ import {
 	FlatList,
 	Pressable,
 	StyleSheet,
+	TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { exampleData } from "@/data/data";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { Car } from "./car-details/[id]";
 
 export default function Dashboard() {
 	const router = useRouter();
+	const [carsVisible, setCarsVisible] = useState(false);
+	const [flatsVisible, setFlatsVisible] = useState(false);
+
 	const carFallbackImage = require("../assets/images/car-fallback.png");
 	const flatFallbackImage = require("../assets/images/flat-fallback.png");
 
@@ -88,26 +93,25 @@ export default function Dashboard() {
 			</Text>
 
 			{/* Your Cars Section */}
-			<Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 8 }}>
-				Your cars
-			</Text>
-			<FlatList
-				data={exampleData.rentedCars}
-				keyExtractor={(item) => item.id.toString()}
-				renderItem={renderCarItem}
-				contentContainerStyle={{ paddingBottom: 16 }}
-			/>
-
-			{/* Your Flats Section */}
-			<Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 8 }}>
-				Your flats (courtesy of Flatly)
-			</Text>
-			<FlatList
-				data={exampleData.rentedFlats}
-				keyExtractor={(item) => item.id.toString()}
-				renderItem={renderFlatItem}
-				contentContainerStyle={{ paddingBottom: 16 }}
-			/>
+			<TouchableOpacity
+				style={styles.sectionHeader}
+				onPress={() => setCarsVisible(!carsVisible)}
+			>
+				<Text style={styles.sectionHeaderText}>Your Cars</Text>
+				<FontAwesome5
+					name={carsVisible ? "chevron-up" : "chevron-down"}
+					size={16}
+					color="#003366"
+				/>
+			</TouchableOpacity>
+			{carsVisible && (
+				<FlatList
+					data={exampleData.rentedCars}
+					keyExtractor={(item) => item.id.toString()}
+					renderItem={renderCarItem}
+					contentContainerStyle={{ paddingBottom: 16 }}
+				/>
+			)}
 
 			{/* Browse Cars Button */}
 			<Pressable
@@ -122,6 +126,45 @@ export default function Dashboard() {
 					}}
 				>
 					Browse cars
+				</Text>
+			</Pressable>
+
+			{/* Your Flats Section */}
+			<TouchableOpacity
+				style={styles.sectionHeader}
+				onPress={() => setFlatsVisible(!flatsVisible)}
+			>
+				<Text style={styles.sectionHeaderText}>
+					Your Flats (via Flatly)
+				</Text>
+				<FontAwesome5
+					name={flatsVisible ? "chevron-up" : "chevron-down"}
+					size={16}
+					color="#003366"
+				/>
+			</TouchableOpacity>
+			{flatsVisible && (
+				<FlatList
+					data={exampleData.rentedFlats}
+					keyExtractor={(item) => item.id.toString()}
+					renderItem={renderFlatItem}
+					contentContainerStyle={{ paddingBottom: 16 }}
+				/>
+			)}
+
+			{/* Browse Flats Button */}
+			<Pressable
+				style={styles.browseButton}
+				onPress={() => router.push("/flat-browser")}
+			>
+				<Text
+					style={{
+						color: "#ffffff",
+						fontWeight: "bold",
+						fontSize: 16,
+					}}
+				>
+					Browse flats (via Flatly)
 				</Text>
 			</Pressable>
 		</SafeAreaView>
@@ -142,7 +185,18 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 16,
 		borderRadius: 8,
 		alignItems: "center",
-		marginTop: 16,
+		marginBottom: 12,
+	},
+	sectionHeader: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginVertical: 12,
+	},
+	sectionHeaderText: {
+		fontSize: 18,
+		fontWeight: "bold",
+		color: "#003366",
 	},
 	renderCarItem: {
 		flexDirection: "row",
