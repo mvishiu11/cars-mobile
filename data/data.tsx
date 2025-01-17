@@ -30,6 +30,8 @@ export const exampleData = {
 			startDate: "2024-11-30",
 			endDate: "2024-12-07",
 			image: null,
+			bedrooms: 2,
+			bathrooms: 1,
 		},
 	],
 	cars: [
@@ -69,6 +71,8 @@ export const exampleData = {
 			size: "44 m²",
 			price: 700,
 			image: null,
+			bedrooms: 2,
+			bathrooms: 1,
 		},
 		{
 			id: 2,
@@ -78,6 +82,8 @@ export const exampleData = {
 			size: "42 m²",
 			price: 700,
 			image: null,
+			bedrooms: 2,
+			bathrooms: 1,
 		},
 		{
 			id: 3,
@@ -87,6 +93,8 @@ export const exampleData = {
 			size: "44 m²",
 			price: 700,
 			image: null,
+			bedrooms: 2,
+			bathrooms: 1,
 		},
 	],
 };
