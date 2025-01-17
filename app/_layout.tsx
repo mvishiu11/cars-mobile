@@ -14,13 +14,10 @@ const theme = {
 	colors: {
 		primary: "#00246B",
 		secondary: "#044EEB",
-		success: "#0abf30",
-		blue: {
-			50: "#ebf8ff",
-			600: "#3182ce",
-			800: "#2c5282",
-		},
-		white: "#ffffff",
+		success: "#04EB2D",
+		info: "#044eeb",
+		error: "#EB044E",
+		warning: "#EBA104",
 	},
 };
 
@@ -39,7 +36,7 @@ const toastConfig = {
 					<FontAwesome5
 						name="check-circle"
 						size={24}
-						color="#0abf30"
+						color="#04EB2D"
 					/>
 				</View>
 			)}
@@ -59,9 +56,89 @@ const toastConfig = {
 			style={{
 				borderRadius: 16,
 				borderWidth: 2,
-				borderColor: "#0abf30",
+				borderColor: "#04EB2D",
 				borderLeftWidth: 2,
-				borderLeftColor: "#0abf30",
+				borderLeftColor: "#04EB2D",
+				height: "auto",
+			}}
+		/>
+	),
+	info: (props: any) => (
+		<BaseToast
+			{...props}
+			renderLeadingIcon={() => (
+				<View
+					style={{
+						justifyContent: "center",
+						paddingLeft: 16,
+					}}
+				>
+					<FontAwesome5
+						name="info-circle"
+						size={24}
+						color="#044eeb"
+					/>
+				</View>
+			)}
+			contentContainerStyle={{
+				paddingLeft: 16,
+				paddingVertical: 8,
+			}}
+			text1Style={{
+				fontSize: 16,
+				fontWeight: "bold",
+			}}
+			text2Style={{
+				fontSize: 14,
+				color: "#888",
+			}}
+			text2NumberOfLines={2}
+			style={{
+				borderRadius: 16,
+				borderWidth: 2,
+				borderColor: "#044eeb",
+				borderLeftWidth: 2,
+				borderLeftColor: "#044eeb",
+				height: "auto",
+			}}
+		/>
+	),
+	error: (props: any) => (
+		<BaseToast
+			{...props}
+			renderLeadingIcon={() => (
+				<View
+					style={{
+						justifyContent: "center",
+						paddingLeft: 16,
+					}}
+				>
+					<FontAwesome5
+						name="info-circle"
+						size={24}
+						color="#EB044E"
+					/>
+				</View>
+			)}
+			contentContainerStyle={{
+				paddingLeft: 16,
+				paddingVertical: 8,
+			}}
+			text1Style={{
+				fontSize: 16,
+				fontWeight: "bold",
+			}}
+			text2Style={{
+				fontSize: 14,
+				color: "#888",
+			}}
+			text2NumberOfLines={2}
+			style={{
+				borderRadius: 16,
+				borderWidth: 2,
+				borderColor: "#EB044E",
+				borderLeftWidth: 2,
+				borderLeftColor: "#EB044E",
 				height: "auto",
 			}}
 		/>
