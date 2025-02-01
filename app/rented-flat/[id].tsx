@@ -51,60 +51,75 @@ export default function RentedFlat() {
 	};
 
 	return (
-		<SafeAreaView style={{ paddingHorizontal: 16 }}>
-			<ScrollView contentContainerStyle={styles.scrollContent}>
-				{/* Flat Image */}
-				<Image
-					source={
-						flat.image
-							? { uri: flat.image }
-							: require("../../assets/images/flat-fallback.png")
-					}
-					style={styles.flatImage}
-					resizeMode="cover"
-				/>
+		<SafeAreaView
+			style={{
+				paddingHorizontal: 16,
+				alignItems: "center",
+				flex: 1,
+			}}
+			edges={["right", "bottom", "left"]}
+		>
+			{/* Flat Image */}
+			<Image
+				source={
+					flat.image
+						? { uri: flat.image }
+						: require("../../assets/images/flat-fallback.png")
+				}
+				style={styles.flatImage}
+				resizeMode="cover"
+			/>
 
-				{/* Flat Details */}
-				<Text style={styles.flatName}>{flat.name}</Text>
-				<Text style={styles.flatPrice}>{flat.price} zł / day</Text>
+			{/* Flat Details */}
+			<Text style={styles.flatName}>{flat.name}</Text>
+			<Text style={styles.flatPrice}>{flat.price} zł / day</Text>
 
-				<View style={styles.flatDetails}>
-					<Text>
-						<FontAwesome5 name="bed" size={16} color="#003366" /> 3
-						Bedrooms
+			<View style={styles.flatDetails}>
+				<Text>
+					<FontAwesome5 name="bed" size={16} color="#00246B" /> 3
+					Bedrooms
+				</Text>
+				<Text>
+					<FontAwesome5 name="bath" size={16} color="#00246B" /> 2
+					Bathrooms
+				</Text>
+				<Pressable
+					onPress={openGoogleMaps}
+					style={styles.googleMapsLink}
+				>
+					<Text style={styles.googleMapsText}>
+						<FontAwesome5
+							name="map-marker-alt"
+							size={16}
+							color="#00246B"
+						/>{" "}
+						Google Maps
 					</Text>
-					<Text>
-						<FontAwesome5 name="bath" size={16} color="#003366" /> 2
-						Bathrooms
-					</Text>
-					<Pressable
-						onPress={openGoogleMaps}
-						style={styles.googleMapsLink}
-					>
-						<Text style={styles.googleMapsText}>
-							<FontAwesome5
-								name="map-marker-alt"
-								size={16}
-								color="#003366"
-							/>{" "}
-							Google Maps
-						</Text>
-					</Pressable>
-				</View>
-
-				{/* Rental Period */}
-				<Text style={styles.sectionHeader}>Will Start Renting</Text>
-				<Text style={styles.rentalDates}>{flat.startDate}</Text>
-				<Text style={styles.sectionHeader}>Until</Text>
-				<Text style={styles.rentalDates}>{flat.endDate}</Text>
-
-				{/* Cancel Button */}
-				<Pressable style={styles.cancelButton} onPress={handleCancel}>
-					<Text style={styles.cancelButtonText}>Cancel</Text>
 				</Pressable>
+			</View>
 
-				<Toast />
-			</ScrollView>
+			{/* Rental Period */}
+			<Text style={styles.sectionHeader}>Will Start Renting</Text>
+			<Text style={styles.rentalDates}>
+				{new Intl.DateTimeFormat("pl-PL", {
+					dateStyle: "short",
+					timeStyle: "short",
+					timeZone: "Europe/Warsaw",
+				}).format(new Date(flat.startDate as string))}
+			</Text>
+			<Text style={styles.sectionHeader}>Until</Text>
+			<Text style={styles.rentalDates}>
+				{new Intl.DateTimeFormat("pl-PL", {
+					dateStyle: "short",
+					timeStyle: "short",
+					timeZone: "Europe/Warsaw",
+				}).format(new Date(flat.endDate as string))}
+			</Text>
+
+			{/* Cancel Button */}
+			<Pressable style={styles.cancelButton} onPress={handleCancel}>
+				<Text style={styles.cancelButtonText}>Cancel</Text>
+			</Pressable>
 		</SafeAreaView>
 	);
 }
@@ -123,14 +138,14 @@ const styles = StyleSheet.create({
 	flatName: {
 		fontSize: 24,
 		fontWeight: "bold",
-		color: "#003366",
+		color: "#00246B",
 		textAlign: "center",
 		marginBottom: 16,
 	},
 	flatPrice: {
 		fontSize: 18,
 		fontWeight: "bold",
-		color: "#003366",
+		color: "#00246B",
 		marginBottom: 16,
 		textAlign: "center",
 	},
@@ -159,7 +174,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	cancelButton: {
-		backgroundColor: "#FF4D4D",
+		backgroundColor: "#EB044E",
 		paddingVertical: 12,
 		borderRadius: 8,
 		alignItems: "center",
