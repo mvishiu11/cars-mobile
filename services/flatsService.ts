@@ -6,12 +6,12 @@ export async function getAllFlats(): Promise<Flat[]> {
     return response.data;
 }
 
-export const getFlatById = async (id: number) => {
-  const response = await apiClient.get(`/api/flats/${id}`);
-  return response.data;
-};
+export async function getFlatById(id: number): Promise<Flat> {
+    const response = await apiClient.get(`/api/flats/${id}`);
+    return response.data;
+}
 
-export const updateFlat = async (id: number, flatData: any) => {
-  const response = await apiClient.put(`/api/flats/${id}`, flatData);
-  return response.data;
-};
+export async function putFlat(id: number, data: Partial<Flat>): Promise<Flat> {
+    const response = await apiClient.put(`/api/flats/${id}`, data);
+    return response.data;
+}

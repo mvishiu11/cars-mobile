@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAllFlats, getFlatById, updateFlat } from '../services/flatsService';
+import { getAllFlats, getFlatById, putFlat } from '../services/flatsService';
 import { Flat } from '../types';
 
 export function useFlats() {
@@ -9,21 +9,26 @@ export function useFlats() {
     });
 }
 
-export function useFlat(id: number) {
-    return useQuery({
-        queryKey: ['flat', id], 
-        queryFn: () => getFlatById(id)
+export function useFlat(id?: number) {
+    return useQuery<Flat, Error>({
+      queryKey: ['flat', id],
+      queryFn: () => {
+        if (!id) throw new Error('No ID provided');
+        return getFlatById(id);
+      },
+      enabled: !!id,
     });
-}
-
-export function useUpdateFlat() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: any }) => updateFlat(id, data),
-    onSuccess: () => {
-        queryClient.invalidateQueries({
-            queryKey: ['flats']
-        });
-    },
-  });
-}
+  }
+  
+  export function useUpdateFlat() {
+    const queryClient = useQueryClient();
+  
+    return useMutation({
+      mutationFn: ({ id, data }: { id: number; data: Partial<Flat> }) =>
+        putFlat(id, data),
+      onSuccess: (updatedFlat) => {
+        queryClient.invalidateQueries({ queryKey: ['flats'] });
+        queryClient.invalidateQueries({ queryKey: ['flat', updatedFlat.id] });
+      },
+    });
+  }
