@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getAllFlats, getFlatById, putFlat } from '../services/flatsService';
+import { getAllFlats, getFlatById, putFlat, getFlatsByUserEmail } from '../services/flatsService';
 import { Flat } from '../types';
 
 export function useFlats() {
@@ -31,4 +31,11 @@ export function useUpdateFlat() {
       queryClient.invalidateQueries({ queryKey: ['flat', updatedFlat.id] });
     },
   });
+}
+
+export function useRentedFlats(email: string) {
+    return useQuery<Flat[], Error>({
+      queryKey: ['rentedFlats', email],
+      queryFn: () => getFlatsByUserEmail(email),
+    });
 }

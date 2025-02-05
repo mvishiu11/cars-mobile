@@ -9,6 +9,7 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { useRentedFlats } from "@/hooks/useFlats";
 import { exampleData } from "@/data/data";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -21,6 +22,14 @@ export default function Dashboard() {
 
 	const carFallbackImage = require("../assets/images/car-fallback.png");
 	const flatFallbackImage = require("../assets/images/flat-fallback.png");
+
+	const {
+		data: rentedFlats,
+		isLoading,
+		isError,
+		error,
+		refetch,
+	} = useRentedFlats("alice.smith@example.com");
 
 	const renderCarItem = ({ item }: { item: Car }) => (
 		<Pressable onPress={() => router.push(`/rented-car/${item.id}`)}>
@@ -54,42 +63,38 @@ export default function Dashboard() {
 	);
 
 	const renderFlatItem = ({ item }: any) => (
-		<Pressable onPress={() => router.push(`/rented-flat/${item.id}`)}>
-			<View style={styles.renderFlatItem}>
-				<Image
-					source={
-						item.image ? { uri: item.image } : flatFallbackImage
-					}
-					style={styles.renderImg}
-					resizeMode="cover"
-				/>
-				<View style={{ flex: 1 }}>
-					<Text style={styles.renderText}>{item.name}</Text>
-					<Text style={{ color: "#666" }}>
-						Check-in:{" "}
-						{new Intl.DateTimeFormat("pl-PL", {
-							dateStyle: "short",
-							timeStyle: "short",
-							timeZone: "Europe/Warsaw",
-						}).format(new Date(item.startDate))}
-					</Text>
-					<Text style={{ color: "#666" }}>
-						Check-out:{" "}
-						{new Intl.DateTimeFormat("pl-PL", {
-							dateStyle: "short",
-							timeStyle: "short",
-							timeZone: "Europe/Warsaw",
-						}).format(new Date(item.endDate))}
-					</Text>
-				</View>
-			</View>
+		<Pressable
+		style={styles.card}
+		onPress={() => router.push(`/flat-details/${item.id}`)}
+		>
+		<Image
+			source={
+			item.images && item.images.length > 0
+				? { uri: item.images[0] }
+				: flatFallbackImage
+			}
+			style={styles.flatImage}
+			resizeMode="cover"
+		/>
+		<View style={styles.flatDetails}>
+			<Text style={styles.flatName}>{item.name}</Text>
+			<Text style={styles.flatInfo}>
+			<FontAwesome5 name="map-marker-alt" size={14} color="#00246B" />{" "}
+			{item.location}
+			</Text>
+			<Text style={styles.flatInfo}>{item.description}</Text>
+		</View>
+		<View style={styles.flatPrice}>
+			<FontAwesome5 name="money-bill" size={20} color="#044EEB" />
+			<Text style={styles.priceText}>{item.price} zł / day</Text>
+		</View>
 		</Pressable>
 	);
 
 	return (
 		<SafeAreaView edges={["bottom"]} style={{ paddingHorizontal: 16 }}>
 			<Text style={styles.welcomeText}>
-				Welcome, {exampleData.username}
+				Welcome, {"Alice Smith"}!
 			</Text>
 
 			{/* Your Cars Section */}
@@ -145,7 +150,7 @@ export default function Dashboard() {
 			</TouchableOpacity>
 			{flatsVisible && (
 				<FlatList
-					data={exampleData.rentedFlats}
+					data={rentedFlats}
 					keyExtractor={(item) => item.id.toString()}
 					renderItem={renderFlatItem}
 					contentContainerStyle={{ paddingBottom: 16 }}
@@ -224,4 +229,46 @@ const styles = StyleSheet.create({
 	},
 	renderImg: { width: 60, height: 60, borderRadius: 8, marginRight: 12 },
 	renderText: { fontWeight: "bold", fontSize: 16, marginBottom: 4 },
+	card: {
+		flexDirection: "row",
+		backgroundColor: "#fff",
+		padding: 16,
+		borderRadius: 8,
+		marginBottom: 16,
+	
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 2,
+	  },
+	  flatImage: {
+		width: 60,
+		height: 60,
+		borderRadius: 8,
+		marginRight: 12,
+	  },
+	  flatDetails: {
+		flex: 1,
+	  },
+	  flatName: {
+		fontWeight: "bold",
+		fontSize: 16,
+		color: "#044EEB",
+	  },
+	  flatInfo: {
+		color: "#666",
+		marginBottom: 4,
+	  },
+	  flatPrice: {
+		alignItems: "center",
+		justifyContent: "center",
+		flexDirection: "row",
+		alignSelf: "flex-end",
+		gap: 8,
+	  },
+	  priceText: {
+		fontWeight: "bold",
+		color: "#00246B",
+	  },
 });
