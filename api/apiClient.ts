@@ -1,9 +1,10 @@
 import axios from 'axios';
 
-const FLATLY_BASE_URL = "http://3.67.172.45:8080"
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+console.log(API_BASE_URL);
 
 const apiClient = axios.create({
-  baseURL: FLATLY_BASE_URL,
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },

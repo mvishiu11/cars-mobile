@@ -18,17 +18,17 @@ export function useFlat(id?: number) {
       },
       enabled: !!id,
     });
-  }
+}
   
-  export function useUpdateFlat() {
-    const queryClient = useQueryClient();
+export function useUpdateFlat() {
+  const queryClient = useQueryClient();
   
-    return useMutation({
-      mutationFn: ({ id, data }: { id: number; data: Partial<Flat> }) =>
-        putFlat(id, data),
-      onSuccess: (updatedFlat) => {
-        queryClient.invalidateQueries({ queryKey: ['flats'] });
-        queryClient.invalidateQueries({ queryKey: ['flat', updatedFlat.id] });
-      },
-    });
-  }
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<Flat> }) =>
+      putFlat(id, data),
+    onSuccess: (updatedFlat) => {
+      queryClient.invalidateQueries({ queryKey: ['flats'] });
+      queryClient.invalidateQueries({ queryKey: ['flat', updatedFlat.id] });
+    },
+  });
+}
