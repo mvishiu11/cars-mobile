@@ -15,7 +15,7 @@ import { useRentedFlats } from "@/hooks/useFlats";
 import { useAuthContext } from "@/context/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Car } from "@/types";
+import { Rental } from "@/types";
 import { useInfiniteRentals } from "@/hooks/useCars";
 
 export default function Dashboard() {
@@ -42,24 +42,22 @@ export default function Dashboard() {
   } = useInfiniteRentals();
 
   const rentals = data?.pages.flatMap((page) => page.content) ?? [];
-  const cars = rentals.map((rental) => rental.car);
 
-  const renderCarItem = ({ item }: ListRenderItemInfo<Car>) => (
+  const renderCarItem = ({ item }: ListRenderItemInfo<Rental>) => (
     <Pressable onPress={() => router.push(`/rented-car/${item.id}`)}>
       <View style={styles.renderCarItem}>
         <Image
-          source={item.imageUrl ? { uri: item.imageUrl } : carFallbackImage}
+          source={item.car.imageUrl ? { uri: item.car.imageUrl } : carFallbackImage}
           style={styles.renderImg}
           resizeMode="contain"
         />
         <View style={{ flex: 1 }}>
-          <Text style={styles.renderText}>{item.model.name}</Text>
-          {/* Show some fields if available */}
+          <Text style={styles.renderText}>{item.car.model.name}</Text>
           <Text style={{ color: "#666" }}>
-            Fuel: {item.model.fuelType}, {item.model.fuelCapacity} L
+            Fuel: {item.car.model.fuelType}, {item.car.model.fuelCapacity} L
           </Text>
           <Text style={{ color: "#666" }}>
-            Daily Rate: {item.model.dailyRate.toFixed(2)} zł
+            Daily Rate: {item.car.model.dailyRate.toFixed(2)} zł
           </Text>
         </View>
       </View>
@@ -101,7 +99,7 @@ export default function Dashboard() {
           {!isLoading && !isError && (
             <>
               <FlatList
-                data={cars}
+                data={rentals}
                 keyExtractor={(item) => item.id}
                 renderItem={renderCarItem}
                 contentContainerStyle={{ paddingBottom: 16 }}

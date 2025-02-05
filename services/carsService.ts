@@ -35,6 +35,14 @@ export async function getRentals(pageParam: number, size: number): Promise<Renta
 }
 
 /**
+ * Fetches a rental by its ID from the backend
+ */
+export async function getRentalById(id: string): Promise<Rental> {
+    const response = await apiClient.get<Rental>(`/rentals/${id}`);
+    return response.data;
+}
+
+/**
  * Fetches a page of cars from the backend
  */
 export async function getCars(page = 0, size = 10): Promise<CarsResponse> {
@@ -45,4 +53,11 @@ export async function getCars(page = 0, size = 10): Promise<CarsResponse> {
     });
     return response.data;
 }
-  
+
+/**
+ * Fetches a car by its ID from the backend
+ */
+export async function getCarById(id: string): Promise<Car> {
+    const response = await apiClient.get<Car>(`/cars/${id}`);
+    return response.data;
+}

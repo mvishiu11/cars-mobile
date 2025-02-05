@@ -1,5 +1,11 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { getRentals, getCars, RentalsResponse, CarsResponse } from "../services/carsService";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { getRentals,
+         getRentalById, 
+         getCars, 
+         getCarById,
+         RentalsResponse, 
+         CarsResponse } from "../services/carsService";
+import { Car, Rental } from "../types";
 
 /** For RENTALS: infinite pagination */
 export function useInfiniteRentals() {
@@ -37,4 +43,18 @@ export function useInfiniteCars() {
       return undefined;
     },
   });
+}
+
+export function useCarById(id: string) {
+    return useQuery<Car, Error>({
+        queryKey: ["car", id],
+        queryFn: () => getCarById(id)
+    });
+}
+
+export function useRentalById(id: string) {
+    return useQuery<Rental, Error>({
+        queryKey: ["rental", id],
+        queryFn: () => getRentalById(id)
+    });
 }
