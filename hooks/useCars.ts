@@ -1,36 +1,40 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getRentals, getCars, RentalsResponse, CarsResponse } from "../services/carsService";
 
-const PAGE_SIZE = 5;
-
+/** For RENTALS: infinite pagination */
 export function useInfiniteRentals() {
-  return useInfiniteQuery<RentalsResponse>({
+  return useInfiniteQuery<RentalsResponse, Error>({
     queryKey: ["rentalsInfinite"],
     initialPageParam: 0,
     queryFn: async ({ pageParam = 0 }) => {
-      return getRentals(pageParam, PAGE_SIZE);
+      return getRentals(pageParam as number, 5);
     },
-    getNextPageParam: (lastPage, allPages) => {
+    getNextPageParam: (lastPage) => {
       const currentPageNumber = lastPage.page.number;
       const totalPages = lastPage.page.totalPages;
       if (currentPageNumber + 1 < totalPages) {
         return currentPageNumber + 1;
       }
-      return undefined; // no more pages
+      return undefined;
     },
   });
 }
 
-/**
- * A simple hook for fetching cars from /cars
- * 
- * @param page number (optional)
- * @param size number (optional)
- */
-export function useCars(page = 0, size = 10) {
-    return useQuery<CarsResponse, Error>({
-      queryKey: ["cars", page, size],
-      queryFn: () => getCars(page, size),
-      // Optional: e.g. staleTime, refetchOnWindowFocus, enabled, etc.
-    });
-  }
+/** For CARS: infinite pagination */
+export function useInfiniteCars() {
+  return useInfiniteQuery<CarsResponse, Error>({
+    queryKey: ["carsInfinite"],
+    initialPageParam: 0,
+    queryFn: async ({ pageParam = 0 }) => {
+      return getCars(pageParam as number, 10);
+    },
+    getNextPageParam: (lastPage) => {
+      const currentPageNumber = lastPage.page.number;
+      const totalPages = lastPage.page.totalPages;
+      if (currentPageNumber + 1 < totalPages) {
+        return currentPageNumber + 1;
+      }
+      return undefined;
+    },
+  });
+}

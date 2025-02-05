@@ -35,15 +35,14 @@ export async function getRentals(pageParam: number, size: number): Promise<Renta
 }
 
 /**
- * GET /cars?page=X&size=Y
- * 
- * If you need pagination, accept page & size as params.
- * If you just want all cars, you can omit them for now.
+ * Fetches a page of cars from the backend
  */
 export async function getCars(page = 0, size = 10): Promise<CarsResponse> {
-    const response = await apiClient.get<CarsResponse>("/cars", {
-      params: { page, size },
+    const response = await apiClient.get<CarsResponse>("/cars/", {
+      params: { 
+        page: page, 
+        size: size },
     });
     return response.data;
-  }
+}
   

@@ -1,4 +1,3 @@
-// Dashboard.tsx
 import React, { useState, useCallback } from "react";
 import {
   View,
@@ -67,9 +66,6 @@ export default function Dashboard() {
     </Pressable>
   );
 
-  // 4) Handle infinite scroll
-  // We only call fetchNextPage if we have a next page, 
-  // and we're not already fetching
   const handleEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -109,9 +105,8 @@ export default function Dashboard() {
                 keyExtractor={(item) => item.id}
                 renderItem={renderCarItem}
                 contentContainerStyle={{ paddingBottom: 16 }}
-                // 5) onEndReached triggers fetchNextPage
                 onEndReached={handleEndReached}
-                onEndReachedThreshold={0.5} // fetch next page when ~50% from bottom
+                onEndReachedThreshold={0.5}
                 ListFooterComponent={
                   isFetchingNextPage ? (
                     <ActivityIndicator size="small" color="#00246B" />
@@ -150,7 +145,6 @@ export default function Dashboard() {
           data={rentedFlats}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => {
-            // ... your existing logic for a flat
             return (
               <Pressable style={styles.card} onPress={() => router.push(`/flat-details/${item.id}`)}>
                 <Image
