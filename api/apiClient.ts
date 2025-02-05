@@ -10,4 +10,24 @@ const apiClient = axios.create({
   },
 });
 
+let authToken: string | null = null;
+
+export function setAuthToken(token: string) {
+  authToken = token;
+  console.log('Token set:', authToken);
+}
+
+// Add a request interceptor to attach the Bearer token
+apiClient.interceptors.request.use(
+  (config) => {
+    if (authToken) {
+      config.headers.Authorization = `Bearer ${authToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 export default apiClient;

@@ -1,5 +1,6 @@
 import { DripsyProvider } from "dripsy";
 import { UserProvider } from "../context/UserContext";
+import { AuthProvider } from "../context/AuthContext";
 import Header from "@/components/Header";
 import { Drawer } from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
@@ -151,125 +152,127 @@ const queryClient = new QueryClient();
 export default function Layout() {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<UserProvider>
-				<DripsyProvider theme={theme}>
-					<StatusBar style="dark" />
-					<Drawer
-						initialRouteName="dashboard"
-						screenOptions={{
-							swipeEnabled: false,
-							drawerHideStatusBarOnOpen: true,
-							header: (props) => <Header {...props} />,
-							drawerActiveTintColor: "#044eeb",
-							drawerInactiveTintColor: "#00246B",
-							drawerItemStyle: { borderRadius: 16 },
-						}}
-						drawerContent={(props) => (
-							<CustomDrawerContent {...props} />
-						)}
-					>
-						<Drawer.Screen
-							name="dashboard"
-							options={{
-								drawerLabel: "Dashboard",
-								drawerIcon: ({ color, size }) => (
-									<FontAwesome5
-										name="home"
-										size={size}
-										color={color}
-									/>
-								),
+			<AuthProvider>
+				<UserProvider>
+					<DripsyProvider theme={theme}>
+						<StatusBar style="dark" />
+						<Drawer
+							initialRouteName="dashboard"
+							screenOptions={{
+								swipeEnabled: false,
+								drawerHideStatusBarOnOpen: true,
+								header: (props) => <Header {...props} />,
+								drawerActiveTintColor: "#044eeb",
+								drawerInactiveTintColor: "#00246B",
+								drawerItemStyle: { borderRadius: 16 },
 							}}
+							drawerContent={(props) => (
+								<CustomDrawerContent {...props} />
+							)}
+						>
+							<Drawer.Screen
+								name="dashboard"
+								options={{
+									drawerLabel: "Dashboard",
+									drawerIcon: ({ color, size }) => (
+										<FontAwesome5
+											name="home"
+											size={size}
+											color={color}
+										/>
+									),
+								}}
+							/>
+							<Drawer.Screen
+								name="car-browser"
+								options={{
+									drawerLabel: "Car Browser",
+									drawerIcon: ({ color, size }) => (
+										<FontAwesome5
+											name="car"
+											size={size}
+											color={color}
+										/>
+									),
+								}}
+							/>
+							<Drawer.Screen
+								name="flat-browser"
+								options={{
+									drawerLabel: "Flat Browser",
+									drawerIcon: ({ color, size }) => (
+										<FontAwesome5
+											name="house-user"
+											size={size}
+											color={color}
+										/>
+									),
+								}}
+							/>
+							<Drawer.Screen
+								name="settings"
+								options={{
+									drawerLabel: "Settings",
+									drawerIcon: ({ color, size }) => (
+										<FontAwesome5
+											name="cog"
+											size={size}
+											color={color}
+										/>
+									),
+								}}
+							/>
+							<Drawer.Screen
+								name="rent-success"
+								options={{ drawerItemStyle: { display: "none" } }}
+							/>
+							<Drawer.Screen
+								name="login-register"
+								options={{
+									drawerItemStyle: { display: "none" },
+									headerShown: false,
+								}}
+							/>
+							<Drawer.Screen
+								name="car-details/[id]"
+								options={{ drawerItemStyle: { display: "none" } }}
+							/>
+							<Drawer.Screen
+								name="flat-details/[id]"
+								options={{ drawerItemStyle: { display: "none" } }}
+							/>
+							<Drawer.Screen
+								name="rented-car/[id]"
+								options={{ drawerItemStyle: { display: "none" } }}
+							/>
+							<Drawer.Screen
+								name="rented-flat/[id]"
+								options={{ drawerItemStyle: { display: "none" } }}
+							/>
+							<Drawer.Screen
+								name="+not-found"
+								options={{ drawerItemStyle: { display: "none" } }}
+							/>
+							<Drawer.Screen
+								name="index"
+								options={{ drawerItemStyle: { display: "none" } }}
+							/>
+							<Drawer.Screen
+								name="welcome"
+								options={{
+									drawerItemStyle: { display: "none" },
+									headerShown: false,
+								}}
+							/>
+						</Drawer>
+						<Toast
+							config={toastConfig}
+							topOffset={54}
+							visibilityTime={2000}
 						/>
-						<Drawer.Screen
-							name="car-browser"
-							options={{
-								drawerLabel: "Car Browser",
-								drawerIcon: ({ color, size }) => (
-									<FontAwesome5
-										name="car"
-										size={size}
-										color={color}
-									/>
-								),
-							}}
-						/>
-						<Drawer.Screen
-							name="flat-browser"
-							options={{
-								drawerLabel: "Flat Browser",
-								drawerIcon: ({ color, size }) => (
-									<FontAwesome5
-										name="house-user"
-										size={size}
-										color={color}
-									/>
-								),
-							}}
-						/>
-						<Drawer.Screen
-							name="settings"
-							options={{
-								drawerLabel: "Settings",
-								drawerIcon: ({ color, size }) => (
-									<FontAwesome5
-										name="cog"
-										size={size}
-										color={color}
-									/>
-								),
-							}}
-						/>
-						<Drawer.Screen
-							name="rent-success"
-							options={{ drawerItemStyle: { display: "none" } }}
-						/>
-						<Drawer.Screen
-							name="login-register"
-							options={{
-								drawerItemStyle: { display: "none" },
-								headerShown: false,
-							}}
-						/>
-						<Drawer.Screen
-							name="car-details/[id]"
-							options={{ drawerItemStyle: { display: "none" } }}
-						/>
-						<Drawer.Screen
-							name="flat-details/[id]"
-							options={{ drawerItemStyle: { display: "none" } }}
-						/>
-						<Drawer.Screen
-							name="rented-car/[id]"
-							options={{ drawerItemStyle: { display: "none" } }}
-						/>
-						<Drawer.Screen
-							name="rented-flat/[id]"
-							options={{ drawerItemStyle: { display: "none" } }}
-						/>
-						<Drawer.Screen
-							name="+not-found"
-							options={{ drawerItemStyle: { display: "none" } }}
-						/>
-						<Drawer.Screen
-							name="index"
-							options={{ drawerItemStyle: { display: "none" } }}
-						/>
-						<Drawer.Screen
-							name="welcome"
-							options={{
-								drawerItemStyle: { display: "none" },
-								headerShown: false,
-							}}
-						/>
-					</Drawer>
-					<Toast
-						config={toastConfig}
-						topOffset={54}
-						visibilityTime={2000}
-					/>
-				</DripsyProvider>
-			</UserProvider>
+					</DripsyProvider>
+				</UserProvider>
+			</AuthProvider>
 		</QueryClientProvider>
 	);
 }

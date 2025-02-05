@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useRentedFlats } from "@/hooks/useFlats";
+import { useAuthContext } from "@/context/AuthContext";
 import { exampleData } from "@/data/data";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -23,13 +24,15 @@ export default function Dashboard() {
 	const carFallbackImage = require("../assets/images/car-fallback.png");
 	const flatFallbackImage = require("../assets/images/flat-fallback.png");
 
+	const { email } = useAuthContext();
+
 	const {
 		data: rentedFlats,
 		isLoading,
 		isError,
 		error,
 		refetch,
-	} = useRentedFlats("alice.smith@example.com");
+	} = useRentedFlats(email as string);
 
 	const renderCarItem = ({ item }: { item: Car }) => (
 		<Pressable onPress={() => router.push(`/rented-car/${item.id}`)}>
@@ -94,7 +97,7 @@ export default function Dashboard() {
 	return (
 		<SafeAreaView edges={["bottom"]} style={{ paddingHorizontal: 16 }}>
 			<Text style={styles.welcomeText}>
-				Welcome, {"Alice Smith"}!
+				Welcome, {email}!
 			</Text>
 
 			{/* Your Cars Section */}
