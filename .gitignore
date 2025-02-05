@@ -39,3 +39,4 @@ app-example
 
 # anon files
 .*
+.env
