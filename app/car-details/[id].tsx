@@ -98,7 +98,7 @@ export default function CarDetails() {
   }
 
   // 5) Handle "Rent" button
-  const handleRent = () => {
+  const handleRent = async () => {
     if (!pickupDate || !returnDate) {
       Toast.show({
         type: "error",
@@ -116,7 +116,7 @@ export default function CarDetails() {
       return;
     }
 
-    rentMutation.mutate({
+    await rentMutation.mutateAsync({
       carId: car.id,
       pickupDate: pickupDate.toISOString(),
       returnDate: returnDate.toISOString(),

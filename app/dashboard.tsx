@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ListRenderItemInfo,
-  ScrollView,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -36,8 +35,7 @@ export default function Dashboard() {
 
   // Flats
   const { data: rentedFlats } = useRentedFlats(email as string);
-  const { data: bookings } = useRentedFlats(email as string);
-
+  console.log(rentedFlats);
   // Cars
   const {
     data,
@@ -75,7 +73,6 @@ export default function Dashboard() {
     </Pressable>
   );
 
-  // If we want infinite scroll in the list
   const handleEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -158,36 +155,42 @@ export default function Dashboard() {
           <View style={{ marginBottom: 16, maxHeight: 300 }}>
             <FlatList
               data={rentedFlats}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item) => item.flat.id.toString()}
               renderItem={({ item }) => (
                 <Pressable
                   style={styles.card}
-                  onPress={() => router.push(`/rented-flat/${item.id}`)}
+                  onPress={() => router.push({
+                      pathname: `/rented-flat`,
+                      params: { 
+                        flatId: item.flat.id,
+                        bookingId: item.booking_id
+                      },
+                  })}  
                 >
                   <Image
                     source={
-                      item.images && item.images.length > 0
-                        ? { uri: item.images[0] }
+                      item.flat.images && item.flat.images.length > 0
+                        ? { uri: item.flat.images[0] }
                         : flatFallbackImage
                     }
                     style={styles.flatImage}
                     resizeMode="cover"
                   />
                   <View style={styles.flatDetails}>
-                    <Text style={styles.flatName}>{item.name}</Text>
+                    <Text style={styles.flatName}>{item.flat.name}</Text>
                     <Text style={styles.flatInfo}>
                       <FontAwesome5
                         name="map-marker-alt"
                         size={14}
                         color="#00246B"
                       />{" "}
-                      {item.location}
+                      {item.flat.location}
                     </Text>
-                    <Text style={styles.flatInfo}>{item.description}</Text>
+                    <Text style={styles.flatInfo}>{item.flat.description}</Text>
                   </View>
                   <View style={styles.flatPrice}>
                     <FontAwesome5 name="money-bill" size={20} color="#044EEB" />
-                    <Text style={styles.priceText}>{item.price} zł / day</Text>
+                    <Text style={styles.priceText}>{item.flat.price} zł / day</Text>
                   </View>
                 </Pressable>
               )}

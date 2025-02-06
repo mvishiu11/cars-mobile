@@ -74,18 +74,20 @@ export function useCancelRental() {
       mutationFn: (id: string) => cancelRental(id),
       onSuccess: (_, id) => {
         queryClient.invalidateQueries({ queryKey: ["rentalsInfinite"] });
+        queryClient.invalidateQueries({ queryKey: ["rental", id] });
       }
     });
-  }  
+}  
 
-  export function useRent() {
-    const queryClient = useQueryClient();
+export function useRent() {
+  const queryClient = useQueryClient();
     
-    return useMutation<Rental, Error, { carId: string, pickupDate: string, returnDate: string }>({
-      mutationFn: ({ carId, pickupDate, returnDate }) => postRentCar(carId, pickupDate, returnDate),
-      onSuccess: (_, { carId }) => {
-        queryClient.invalidateQueries({ queryKey: ["carsInfinite"] });
-        queryClient.invalidateQueries({ queryKey: ["car", carId] });
-      }
-    })
-  }  
+  return useMutation<Rental, Error, { carId: string, pickupDate: string, returnDate: string }>({
+    mutationFn: ({ carId, pickupDate, returnDate }) => postRentCar(carId, pickupDate, returnDate),
+    onSuccess: (_, { carId }) => {
+      queryClient.invalidateQueries({ queryKey: ["carsInfinite"] });
+      queryClient.invalidateQueries({ queryKey: ["car", carId] });
+      queryClient.invalidateQueries({ queryKey: ["rentalsInfinite"] });
+    }
+  })
+}

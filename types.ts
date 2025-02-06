@@ -18,6 +18,11 @@ export interface Booking {
     endDate: string;
 }
 
+export interface FlatBooking {
+  booking_id: number;
+  flat: Flat;
+}
+
 export interface CarModel {
     id: string;
     brandName: string;

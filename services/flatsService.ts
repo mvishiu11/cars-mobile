@@ -1,5 +1,5 @@
 import apiClient from '../api/apiClient';
-import { Flat } from '../types';
+import { Flat, FlatBooking } from '../types';
 
 const API_PREFIX = '/flatly/api';
 
@@ -18,7 +18,7 @@ export async function putFlat(id: number, data: Partial<Flat>): Promise<Flat> {
     return response.data;
 }
 
-export async function getFlatsByUserEmail(email: string): Promise<Flat[]> {
+export async function getFlatsByUserEmail(email: string): Promise<FlatBooking[]> {
     const response = await apiClient.get(API_PREFIX + `/bookings/active/flats?userEmail=${email}`);
     return response.data;
 }

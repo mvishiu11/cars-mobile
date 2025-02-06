@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getAllFlats, getFlatById, putFlat, getFlatsByUserEmail, postBooking, deleteBooking } from '../services/flatsService';
-import { Flat, Booking } from '../types';
+import { Flat, Booking, FlatBooking } from '../types';
 
 export function useFlats() {
     return useQuery<Flat[], Error>({
@@ -34,7 +34,7 @@ export function useUpdateFlat() {
 }
 
 export function useRentedFlats(email: string) {
-    return useQuery<Flat[], Error>({
+    return useQuery<FlatBooking[], Error>({
       queryKey: ['rentedFlats', email],
       queryFn: () => getFlatsByUserEmail(email),
     });
@@ -60,8 +60,7 @@ export function useDeleteBooking() {
     mutationFn: (bookingId: number) => deleteBooking(bookingId),
     onSuccess: (_, bookingId) => {
       queryClient.invalidateQueries({ queryKey: ['flats'] });
-      queryClient.invalidateQueries({ queryKey: ['flat', bookingId] });
-      queryClient.invalidateQueries({ queryKey: ['rentalsInfinite'] });
+      queryClient.invalidateQueries({ queryKey: ['rentedFlats'] });
     },
   });
 }

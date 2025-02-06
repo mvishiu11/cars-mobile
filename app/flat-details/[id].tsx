@@ -111,7 +111,7 @@ export default function FlatDetails() {
 
   // Handler for renting the flat
   const handleRent = async () => {
-    if (!startDate || !endDate || !email) {
+    if (!startDate || !endDate) {
       Toast.show({
         type: "error",
         text1: "Error",
@@ -133,7 +133,7 @@ export default function FlatDetails() {
       // Call the rentFlat mutation
       await rentFlat.mutateAsync({
         flatId: flat.id,
-        userEmail: email!,
+        userEmail: email as string,
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
       });
