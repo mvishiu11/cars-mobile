@@ -80,7 +80,7 @@ export default function Dashboard() {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }}>
       <View
         style={{ flex: 1, paddingHorizontal: 16 }}
       >
@@ -91,7 +91,7 @@ export default function Dashboard() {
         {/* =========================== */}
         <TouchableOpacity
           style={styles.sectionHeader}
-          onPress={() => setCarsVisible(!carsVisible)}
+          onPress={() => { setCarsVisible(!carsVisible); setFlatsVisible(false); }}
         >
           <Text style={styles.sectionHeaderText}>Your Cars</Text>
           <FontAwesome5
@@ -116,6 +116,7 @@ export default function Dashboard() {
                 contentContainerStyle={{ paddingBottom: 16 }}
                 onEndReached={handleEndReached}
                 onEndReachedThreshold={0.5}
+                scrollEnabled={true}
                 ListFooterComponent={
                   isFetchingNextPage ? (
                     <ActivityIndicator size="small" color="#00246B" />
@@ -141,7 +142,7 @@ export default function Dashboard() {
         {/* ============================= */}
         <TouchableOpacity
           style={styles.sectionHeader}
-          onPress={() => setFlatsVisible(!flatsVisible)}
+          onPress={() => { setFlatsVisible(!flatsVisible); setCarsVisible(false); }}
         >
           <Text style={styles.sectionHeaderText}>Your Flats (via Flatly)</Text>
           <FontAwesome5
@@ -156,6 +157,7 @@ export default function Dashboard() {
             <FlatList
               data={rentedFlats}
               keyExtractor={(item) => item.flat.id.toString()}
+              scrollEnabled={true}
               renderItem={({ item }) => (
                 <Pressable
                   style={styles.card}
