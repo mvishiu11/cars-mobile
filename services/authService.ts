@@ -1,7 +1,7 @@
 import apiClient, { setAuthToken } from "../api/apiClient";
 
 export async function register(email: string): Promise<{ email: string; token: string }> {
-  const response = await apiClient.post("/customers", { email });
+  const response = await apiClient.post("/customers/", { email });
 
   const authHeader = response.headers["authorization"] || response.headers["Authorization"];
   if (!authHeader) {

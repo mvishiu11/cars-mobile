@@ -36,6 +36,7 @@ export default function Dashboard() {
 
   // Flats
   const { data: rentedFlats } = useRentedFlats(email as string);
+  const { data: bookings } = useRentedFlats(email as string);
 
   // Cars
   const {
@@ -161,7 +162,7 @@ export default function Dashboard() {
               renderItem={({ item }) => (
                 <Pressable
                   style={styles.card}
-                  onPress={() => router.push(`/flat-details/${item.id}`)}
+                  onPress={() => router.push(`/rented-flat/${item.id}`)}
                 >
                   <Image
                     source={

@@ -22,3 +22,23 @@ export async function getFlatsByUserEmail(email: string): Promise<Flat[]> {
     const response = await apiClient.get(API_PREFIX + `/bookings/active/flats?userEmail=${email}`);
     return response.data;
 }
+
+export async function getBookingsByUserEmail(email: string): Promise<Flat[]> {
+    const response = await apiClient.get(API_PREFIX + `/bookings/active/flats?userEmail=${email}`);
+    return response.data;
+}
+
+export async function postBooking(flatId: number, userEmail: string, startDate: string, endDate: string): Promise<void> {
+    await apiClient.post(API_PREFIX + '/bookings', {
+        flatId,
+        userEmail,
+        startDate,
+        endDate,
+        status: 'ACTIVE',
+        system: 'CARLY',
+    });
+}
+
+export async function deleteBooking(id: number): Promise<void> {
+    await apiClient.delete(API_PREFIX + `/bookings/${id}`);
+}

@@ -11,6 +11,13 @@ export interface Flat {
     roomNumber: number;
 }
 
+export interface Booking {
+    flatId: number;
+    userEmail: string;
+    startDate: string;
+    endDate: string;
+}
+
 export interface CarModel {
     id: string;
     brandName: string;

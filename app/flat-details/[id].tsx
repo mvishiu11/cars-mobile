@@ -17,7 +17,8 @@ import DateTimeSelector, {
 import Checkbox from "expo-checkbox";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFlat, useUpdateFlat } from "../../hooks/useFlats";
+import { useFlat, useRentFlat } from "../../hooks/useFlats";
+import { useAuthContext } from "@/context/AuthContext";
 
 function openGoogleMaps(location: string) {
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${location}`;
@@ -68,6 +69,12 @@ export default function FlatDetails() {
     error,
   } = useFlat(numericId);
 
+  // Rent flat mutation
+  const rentFlat = useRentFlat();
+
+  // Get email from context
+  const { email } = useAuthContext();
+
   // State for renting form
   const [startDate, setStartDate] = useState(nextAvailableDate);
   const [isStartDateModalOpen, setStartDateModalOpen] = useState(false);
@@ -104,7 +111,7 @@ export default function FlatDetails() {
 
   // Handler for renting the flat
   const handleRent = async () => {
-    if (!startDate || !endDate) {
+    if (!startDate || !endDate || !email) {
       Toast.show({
         type: "error",
         text1: "Error",
@@ -123,7 +130,14 @@ export default function FlatDetails() {
     }
 
     try {
-      // Perform the rent operation (TODO: Implement this after API is ready)
+      // Call the rentFlat mutation
+      await rentFlat.mutateAsync({
+        flatId: flat.id,
+        userEmail: email!,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      });
+      
       // Show success message
       Toast.show({
         type: "success",
