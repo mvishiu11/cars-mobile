@@ -17,7 +17,7 @@ import DateTimeSelector, {
   getNextAvailableDate,
 } from "@/components/DateTimeSelector";
 // Hook fetching the car from the API
-import { useCarById } from "@/hooks/useCars";
+import { useCarById, useRent } from "@/hooks/useCars";
 
 // A fallback image if none is provided
 const carFallbackImage = require("../../assets/images/car-fallback.png");
@@ -25,6 +25,7 @@ const carFallbackImage = require("../../assets/images/car-fallback.png");
 export default function CarDetails() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const rentMutation = useRent();
 
   // 1) Fetch the Car from your API
   const { data: car, isLoading, isError, error } = useCarById(id as string);
@@ -115,13 +116,25 @@ export default function CarDetails() {
       return;
     }
 
-    // Here you might call an actual rent endpoint
+    rentMutation.mutate({
+      carId: car.id,
+      pickupDate: pickupDate.toISOString(),
+      returnDate: returnDate.toISOString(),
+    });
+
     Toast.show({
       type: "success",
       text1: "Car Rented!",
       text2: `${car.model.brandName} ${car.model.name} successfully rented. 🚗`,
     });
-    router.push("/rent-success");
+    router.push({
+      pathname: "/rent-success",
+      params: {
+        carId: car.id,
+        pickupDate: pickupDate.toISOString(),
+        returnDate: returnDate.toISOString(),
+      },
+    });    
   };
 
   return (

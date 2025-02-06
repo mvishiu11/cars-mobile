@@ -1,6 +1,11 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, 
+         useQuery,
+         useMutation,
+         useQueryClient } from "@tanstack/react-query";
 import { getRentals,
          getRentalById, 
+         cancelRental,
+         postRentCar,
          getCars, 
          getCarById,
          RentalsResponse, 
@@ -58,3 +63,29 @@ export function useRentalById(id: string) {
         queryFn: () => getRentalById(id)
     });
 }
+
+/**
+ * Hook to cancel a rental and clear query cache
+ */
+export function useCancelRental() {
+    const queryClient = useQueryClient();
+    
+    return useMutation<void, Error, string>({
+      mutationFn: (id: string) => cancelRental(id),
+      onSuccess: (_, id) => {
+        queryClient.invalidateQueries({ queryKey: ["rentalsInfinite"] });
+      }
+    });
+  }  
+
+  export function useRent() {
+    const queryClient = useQueryClient();
+    
+    return useMutation<Rental, Error, { carId: string, pickupDate: string, returnDate: string }>({
+      mutationFn: ({ carId, pickupDate, returnDate }) => postRentCar(carId, pickupDate, returnDate),
+      onSuccess: (_, { carId }) => {
+        queryClient.invalidateQueries({ queryKey: ["carsInfinite"] });
+        queryClient.invalidateQueries({ queryKey: ["car", carId] });
+      }
+    })
+  }  

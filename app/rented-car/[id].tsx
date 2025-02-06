@@ -13,7 +13,6 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import QRCode from "react-native-qrcode-svg";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-
 import { useRentalById } from "@/hooks/useCars";
 const carFallbackImage = require("../../assets/images/car-fallback.png");
 

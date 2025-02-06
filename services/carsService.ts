@@ -43,6 +43,13 @@ export async function getRentalById(id: string): Promise<Rental> {
 }
 
 /**
+ * Cancels a rental by its ID
+ */
+export async function cancelRental(id: string): Promise<void> {
+    await apiClient.delete(`/rentals/${id}`);
+}
+
+/**
  * Fetches a page of cars from the backend
  */
 export async function getCars(page = 0, size = 10): Promise<CarsResponse> {
@@ -59,5 +66,17 @@ export async function getCars(page = 0, size = 10): Promise<CarsResponse> {
  */
 export async function getCarById(id: string): Promise<Car> {
     const response = await apiClient.get<Car>(`/cars/${id}`);
+    return response.data;
+}
+
+/**
+ * Rents a car
+ */
+export async function postRentCar(carId: string, pickupDate: string, returnDate: string): Promise<Rental> {
+    const response = await apiClient.post<Rental>("/rentals/", {
+        carId,
+        pickupDate,
+        returnDate,
+    });
     return response.data;
 }

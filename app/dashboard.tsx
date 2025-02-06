@@ -8,33 +8,40 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-  ListRenderItemInfo
+  ListRenderItemInfo,
+  ScrollView,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useRentedFlats } from "@/hooks/useFlats";
-import { useAuthContext } from "@/context/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Rental } from "@/types";
+
+// Hooks
+import { useAuthContext } from "@/context/AuthContext";
+import { useRentedFlats } from "@/hooks/useFlats";
 import { useInfiniteRentals } from "@/hooks/useCars";
+
+// Types
+import { Rental } from "@/types";
+
+// Assets
+const carFallbackImage = require("../assets/images/car-fallback.png");
+const flatFallbackImage = require("../assets/images/flat-fallback.png");
 
 export default function Dashboard() {
   const router = useRouter();
   const [carsVisible, setCarsVisible] = useState(false);
   const [flatsVisible, setFlatsVisible] = useState(false);
 
-  const carFallbackImage = require("../assets/images/car-fallback.png");
-  const flatFallbackImage = require("../assets/images/flat-fallback.png");
-
   const { email } = useAuthContext();
 
+  // Flats
   const { data: rentedFlats } = useRentedFlats(email as string);
 
+  // Cars
   const {
     data,
     error,
     isError,
-    isFetching,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
@@ -43,11 +50,14 @@ export default function Dashboard() {
 
   const rentals = data?.pages.flatMap((page) => page.content) ?? [];
 
+  // Renders each rental item for "Your Cars"
   const renderCarItem = ({ item }: ListRenderItemInfo<Rental>) => (
     <Pressable onPress={() => router.push(`/rented-car/${item.id}`)}>
       <View style={styles.renderCarItem}>
         <Image
-          source={item.car.imageUrl ? { uri: item.car.imageUrl } : carFallbackImage}
+          source={
+            item.car.imageUrl ? { uri: item.car.imageUrl } : carFallbackImage
+          }
           style={styles.renderImg}
           resizeMode="contain"
         />
@@ -64,6 +74,7 @@ export default function Dashboard() {
     </Pressable>
   );
 
+  // If we want infinite scroll in the list
   const handleEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -71,33 +82,35 @@ export default function Dashboard() {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
-    <SafeAreaView edges={["bottom"]} style={{ paddingHorizontal: 16 }}>
-      <Text style={styles.welcomeText}>Welcome, {email}!</Text>
-
-      {/* =========================== */}
-      {/* YOUR CARS (Infinite Scroll) */}
-      {/* =========================== */}
-      <TouchableOpacity
-        style={styles.sectionHeader}
-        onPress={() => setCarsVisible(!carsVisible)}
+    <SafeAreaView style={{ flex: 1 }}>
+      <View
+        style={{ flex: 1, paddingHorizontal: 16 }}
       >
-        <Text style={styles.sectionHeaderText}>Your Cars</Text>
-        <FontAwesome5
-          name={carsVisible ? "chevron-up" : "chevron-down"}
-          size={16}
-          color="#003366"
-        />
-      </TouchableOpacity>
+        <Text style={styles.welcomeText}>Welcome, {email}!</Text>
 
-      {carsVisible && (
-        <View style={{ marginBottom: 16 }}>
-          {isLoading && <ActivityIndicator size="large" color="#00246B" />}
-          {isError && (
-            <Text style={{ color: "red" }}>Error: {String(error)}</Text>
-          )}
+        {/* =========================== */}
+        {/* YOUR CARS (Infinite Scroll) */}
+        {/* =========================== */}
+        <TouchableOpacity
+          style={styles.sectionHeader}
+          onPress={() => setCarsVisible(!carsVisible)}
+        >
+          <Text style={styles.sectionHeaderText}>Your Cars</Text>
+          <FontAwesome5
+            name={carsVisible ? "chevron-up" : "chevron-down"}
+            size={16}
+            color="#003366"
+          />
+        </TouchableOpacity>
 
-          {!isLoading && !isError && (
-            <>
+        {carsVisible && (
+          <View style={{ marginBottom: 16, maxHeight: 300 }}>
+            {isLoading && <ActivityIndicator size="large" color="#00246B" />}
+            {isError && (
+              <Text style={{ color: "red" }}>Error: {String(error)}</Text>
+            )}
+
+            {!isLoading && !isError && (
               <FlatList
                 data={rentals}
                 keyExtractor={(item) => item.id}
@@ -111,74 +124,87 @@ export default function Dashboard() {
                   ) : null
                 }
               />
-            </>
-          )}
-        </View>
-      )}
+            )}
+          </View>
+        )}
 
-      {/* Browse Cars Button */}
-      <Pressable style={styles.browseButton} onPress={() => router.push("/car-browser")}>
-        <Text style={{ color: "#ffffff", fontWeight: "bold", fontSize: 16 }}>
-          Browse cars
-        </Text>
-      </Pressable>
+        {/* Browse Cars Button */}
+        <Pressable
+          style={styles.browseButton}
+          onPress={() => router.push("/car-browser")}
+        >
+          <Text style={{ color: "#ffffff", fontWeight: "bold", fontSize: 16 }}>
+            Browse cars
+          </Text>
+        </Pressable>
 
-      {/* ============================= */}
-      {/* YOUR FLATS (via Flatly)      */}
-      {/* ============================= */}
-      <TouchableOpacity
-        style={styles.sectionHeader}
-        onPress={() => setFlatsVisible(!flatsVisible)}
-      >
-        <Text style={styles.sectionHeaderText}>Your Flats (via Flatly)</Text>
-        <FontAwesome5
-          name={flatsVisible ? "chevron-up" : "chevron-down"}
-          size={16}
-          color="#003366"
-        />
-      </TouchableOpacity>
+        {/* ============================= */}
+        {/* YOUR FLATS (via Flatly)      */}
+        {/* ============================= */}
+        <TouchableOpacity
+          style={styles.sectionHeader}
+          onPress={() => setFlatsVisible(!flatsVisible)}
+        >
+          <Text style={styles.sectionHeaderText}>Your Flats (via Flatly)</Text>
+          <FontAwesome5
+            name={flatsVisible ? "chevron-up" : "chevron-down"}
+            size={16}
+            color="#003366"
+          />
+        </TouchableOpacity>
 
-      {flatsVisible && (
-        <FlatList
-          data={rentedFlats}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => {
-            return (
-              <Pressable style={styles.card} onPress={() => router.push(`/flat-details/${item.id}`)}>
-                <Image
-                  source={
-                    item.images && item.images.length > 0
-                      ? { uri: item.images[0] }
-                      : flatFallbackImage
-                  }
-                  style={styles.flatImage}
-                  resizeMode="cover"
-                />
-                <View style={styles.flatDetails}>
-                  <Text style={styles.flatName}>{item.name}</Text>
-                  <Text style={styles.flatInfo}>
-                    <FontAwesome5 name="map-marker-alt" size={14} color="#00246B" />{" "}
-                    {item.location}
-                  </Text>
-                  <Text style={styles.flatInfo}>{item.description}</Text>
-                </View>
-                <View style={styles.flatPrice}>
-                  <FontAwesome5 name="money-bill" size={20} color="#044EEB" />
-                  <Text style={styles.priceText}>{item.price} zł / day</Text>
-                </View>
-              </Pressable>
-            );
-          }}
-          contentContainerStyle={{ paddingBottom: 16 }}
-        />
-      )}
+        {flatsVisible && (
+          <View style={{ marginBottom: 16, maxHeight: 300 }}>
+            <FlatList
+              data={rentedFlats}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <Pressable
+                  style={styles.card}
+                  onPress={() => router.push(`/flat-details/${item.id}`)}
+                >
+                  <Image
+                    source={
+                      item.images && item.images.length > 0
+                        ? { uri: item.images[0] }
+                        : flatFallbackImage
+                    }
+                    style={styles.flatImage}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.flatDetails}>
+                    <Text style={styles.flatName}>{item.name}</Text>
+                    <Text style={styles.flatInfo}>
+                      <FontAwesome5
+                        name="map-marker-alt"
+                        size={14}
+                        color="#00246B"
+                      />{" "}
+                      {item.location}
+                    </Text>
+                    <Text style={styles.flatInfo}>{item.description}</Text>
+                  </View>
+                  <View style={styles.flatPrice}>
+                    <FontAwesome5 name="money-bill" size={20} color="#044EEB" />
+                    <Text style={styles.priceText}>{item.price} zł / day</Text>
+                  </View>
+                </Pressable>
+              )}
+              contentContainerStyle={{ paddingBottom: 16 }}
+            />
+          </View>
+        )}
 
-      {/* Browse Flats Button */}
-      <Pressable style={styles.browseButton} onPress={() => router.push("/flat-browser")}>
-        <Text style={{ color: "#ffffff", fontWeight: "bold", fontSize: 16 }}>
-          Browse flats (via Flatly)
-        </Text>
-      </Pressable>
+        {/* Browse Flats Button */}
+        <Pressable
+          style={styles.browseButton}
+          onPress={() => router.push("/flat-browser")}
+        >
+          <Text style={{ color: "#ffffff", fontWeight: "bold", fontSize: 16 }}>
+            Browse flats (via Flatly)
+          </Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 }
@@ -216,6 +242,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
+
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -231,6 +258,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
+
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
