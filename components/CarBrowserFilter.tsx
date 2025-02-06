@@ -14,6 +14,7 @@ import DateTimeSelector, { getNextAvailableDate } from "./DateTimeSelector";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import { useLocations } from "@/hooks/useCars";
+import { SelectList } from "react-native-dropdown-select-list";
 
 export interface Brand {
 	key: number;
@@ -146,7 +147,9 @@ const CarBrowserFilter = ({
 					dateTime={new Date(availableFrom)}
 					setDateTime={(date) => {
 						setAvailableFrom(date.toISOString());
-						setAvailableTo(date.toISOString());
+						if (new Date(availableTo) < date) {
+							setAvailableTo(date.toISOString());
+						}
 					}}
 					isDateModalOpen={isFromDateModalOpen}
 					setDateModalOpen={setIsFromDateModalOpen}
@@ -167,37 +170,19 @@ const CarBrowserFilter = ({
 
 				{/* City */}
 				<Text style={styles.header}>City</Text>
-				<MultipleSelectList
+				<SelectList
 					data={cities}
-					save="value"
-					label="Selected City"
-					setSelected={(val : string) => setCity(val[0])}
-					arrowicon={
-						<FontAwesome5
-							name="chevron-down"
-							size={16}
-							color="#00246B"
-						/>
-					}
-					searchicon={
-						<FontAwesome5 name="search" size={16} color="#00246B" />
-					}
-					closeicon={
-						<FontAwesome5 name="times" size={16} color="#00246B" />
-					}
-					checkicon={
-						<FontAwesome5 name="check" size={10} color="#fff" />
-					}
-					searchPlaceholder="Search cities"
-					notFoundText="No cities found"
-					boxStyles={{ borderColor: "#00246B" }}
+					setSelected={(val: string) => setCity(val)}
 					placeholder="Select city"
+					searchPlaceholder="Search cities"
+					arrowicon={<FontAwesome5 name="chevron-down" size={16} color="#00246B" />}
+					searchicon={<FontAwesome5 name="search" size={16} color="#00246B" />}
+					closeicon={<FontAwesome5 name="times" size={16} color="#00246B" />}
+					boxStyles={{ borderColor: "#00246B" }}
 					inputStyles={{ color: "#888" }}
-					labelStyles={{ color: "#00246B" }}
-					badgeStyles={{ backgroundColor: "#044eeb" }}
 					dropdownStyles={{ borderColor: "#00246B" }}
-					onShow={() => ref.current?.scrollToEnd({ animated: true })}
 				/>
+
 				
 				<View
 					style={{

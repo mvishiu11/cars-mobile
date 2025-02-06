@@ -140,6 +140,7 @@ export default function CarBrowser() {
         <Pressable
           style={styles.searchButton}
           onPress={() => {
+            console.log(city);
             if (query.length > 2 || filters !== defaultFilters) {
               setFilters({
                 ...filters,

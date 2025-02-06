@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as Location from 'expo-location'; // Import Expo Location API
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 console.log(API_BASE_URL);
@@ -12,27 +13,46 @@ const apiClient = axios.create({
 
 let authToken: string | null = null;
 
+// Function to set Authorization Token
 export function setAuthToken(token: string) {
   authToken = token;
   console.log('Token set:', authToken);
 }
 
-// Add a request interceptor to attach the Bearer token
+const DEFAULT_COORDINATES = "21.1311:52.1337"; // Warsaw
+
+async function getLocationHeader() {
+  try {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.warn("Location permission denied.");
+      return DEFAULT_COORDINATES;
+    }
+
+    const location = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.High,
+    });
+
+    return `${location.coords.longitude};${location.coords.latitude}`;
+  } catch (error) {
+    console.error("Error getting location:", error);
+    return DEFAULT_COORDINATES;
+  }
+}
+
+// Add a request interceptor to attach the Bearer token & coordinates
 apiClient.interceptors.request.use(
-  (config) => {
+  async (config) => {
     if (authToken) {
       config.headers.Authorization = `Bearer ${authToken}`;
     }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
-// REQUEST INTERCEPTOR: logs every request
-apiClient.interceptors.request.use(
-  (config) => {
+    const coordinates = await getLocationHeader();
+    console.log('Coordinates:', coordinates);
+    if (coordinates) {
+      config.headers["X-Coordinates"] = coordinates;
+    }
+
     console.log("Axios Request:", {
       method: config.method,
       url: config.url,
@@ -40,6 +60,7 @@ apiClient.interceptors.request.use(
       data: config.data,
       headers: config.headers,
     });
+
     return config;
   },
   (error) => {
