@@ -8,13 +8,14 @@ import {
   StyleSheet,
   Linking,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFlat } from "../../hooks/useFlats";
-import { useAuthContext } from "@/context/AuthContext";
+import { useDeleteBooking } from "@/hooks/useFlats";
 
 function openGoogleMaps(location: string) {
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${location}`;
@@ -46,10 +47,12 @@ function FlatInfo({ flat }: { flat: any }) {
 }
 
 export default function RentedFlat() {
+  // 1) Always define your hooks at the top level
   const { id } = useLocalSearchParams();
   const numericId = Number(id);
   const router = useRouter();
 
+  // Fetch the specific flat
   const {
     data: flat,
     isLoading,
@@ -57,8 +60,12 @@ export default function RentedFlat() {
     error,
   } = useFlat(numericId);
 
-  const flatFallbackImage = require("../../assets/images/flat-fallback.png");
+  // Our custom mutation hook
+  const deleteBookingMutation = useDeleteBooking();
+  const { mutate: deleteBooking, status } = deleteBookingMutation;
+  const isDeleting = status === 'pending';
 
+  // 2) Early returns for loading/error states
   if (isLoading) {
     return (
       <SafeAreaView style={styles.centeredView}>
@@ -78,13 +85,37 @@ export default function RentedFlat() {
     );
   }
 
+  const flatFallbackImage = require("../../assets/images/flat-fallback.png");
+
+  // 3) Deletion logic
   const handleCancel = () => {
-    Toast.show({
-      type: "info",
-      text1: "Rental Canceled",
-      text2: `${flat.name} has been removed from your rented flats.`,
-    });
-    router.push("/dashboard");
+    Alert.alert("Confirm", `Cancel rental for ${flat.name}?`, [
+      { text: "No", style: "cancel" },
+      {
+        text: "Yes",
+        style: "destructive",
+        onPress: () => {
+          // Call our mutation
+          deleteBooking(numericId, {
+            onSuccess: () => {
+              Toast.show({
+                type: "info",
+                text1: "Rental Canceled",
+                text2: `${flat.name} has been removed from your rented flats.`,
+              });
+              router.push("/dashboard");
+            },
+            onError: (err) => {
+              Toast.show({
+                type: "error",
+                text1: "Cancel Error",
+                text2: err.message || "An error occurred",
+              });
+            },
+          });
+        },
+      },
+    ]);
   };
 
   return (
@@ -99,8 +130,18 @@ export default function RentedFlat() {
         <Text style={styles.flatPrice}>{flat.price} zł / day</Text>
         <FlatInfo flat={flat} />
 
-        <Pressable style={styles.cancelButton} onPress={handleCancel}>
-          <Text style={styles.cancelButtonText}>Cancel</Text>
+        {/* "Cancel" or "Delete Booking" button */}
+        <Pressable
+          style={[
+            styles.cancelButton,
+            isDeleting && { opacity: 0.7 },
+          ]}
+          onPress={handleCancel}
+          disabled={isDeleting}
+        >
+          <Text style={styles.cancelButtonText}>
+            {isDeleting ? "Canceling..." : "Cancel"}
+          </Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>
@@ -140,18 +181,6 @@ const styles = StyleSheet.create({
   googleMapsText: {
     color: "#044eeb",
     fontWeight: "bold",
-  },
-  sectionHeader: {
-    fontWeight: "bold",
-    fontSize: 16,
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  rentalDates: {
-    marginBottom: 16,
-    fontSize: 14,
-    color: "#333",
-    textAlign: "center",
   },
   cancelButton: {
     backgroundColor: "#EB044E",
