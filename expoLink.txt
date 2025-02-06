@@ -1,4 +1,5 @@
-https://expo.dev/preview/update?message=Final%20Project%20Preview%20v1.0.2&updateRuntimeVersion=1.0.0&createdAt=2025-02-06T14%3A35%3A05.024Z&slug=exp&projectId=70d67bcf-fd63-40ff-b90e-602832c82c42&group=54d02e0d-ecdc-445b-9a91-053464d2d24e
+https://expo.dev/preview/update?message=Final%20Project%20Preview%20v1.0.5&updateRuntimeVersion=1.0.0&createdAt=2025-02-06T14%3A53%3A58.728Z&slug=exp&projectId=70d67bcf-fd63-40ff-b90e-602832c82c42&group=3ae54c43-6638-49dd-bbb2-4e63349f1b41
 
 if for some reason this does not work, below is an .apk build of this application:
 
+https://expo.dev/accounts/mvishiu11/projects/cars-mobile/builds/5e3968de-6bde-47df-8c5c-0d63174f3da5
