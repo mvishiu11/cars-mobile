@@ -91,8 +91,8 @@ export function useCancelRental() {
 export function useRent() {
   const queryClient = useQueryClient();
     
-  return useMutation<Rental, Error, { carId: string, pickupDate: string, returnDate: string }>({
-    mutationFn: ({ carId, pickupDate, returnDate }) => postRentCar(carId, pickupDate, returnDate),
+  return useMutation<Rental, Error, { carId: string, startAt: string, endAt: string }>({
+    mutationFn: ({ carId, startAt, endAt }) => postRentCar(carId, startAt, endAt),
     onSuccess: (_, { carId }) => {
       queryClient.invalidateQueries({ queryKey: ["carsInfinite"] });
       queryClient.invalidateQueries({ queryKey: ["rentalsInfinite"] });

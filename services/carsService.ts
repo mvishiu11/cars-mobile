@@ -72,11 +72,11 @@ export async function getCarById(id: string): Promise<Car> {
 /**
  * Rents a car
  */
-export async function postRentCar(carId: string, pickupDate: string, returnDate: string): Promise<Rental> {
+export async function postRentCar(carId: string, startAt: string, endAt: string): Promise<Rental> {
     const response = await apiClient.post<Rental>("/rentals/", {
         carId,
-        pickupDate,
-        returnDate,
+        startAt,
+        endAt,
     });
     return response.data;
 }

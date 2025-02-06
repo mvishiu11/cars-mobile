@@ -118,8 +118,8 @@ export default function CarDetails() {
 
     await rentMutation.mutateAsync({
       carId: car.id,
-      pickupDate: pickupDate.toISOString(),
-      returnDate: returnDate.toISOString(),
+      startAt: pickupDate.toISOString(),
+      endAt: returnDate.toISOString(),
     });
 
     Toast.show({
