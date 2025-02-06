@@ -250,6 +250,10 @@ export default function Layout() {
 								options={{ drawerItemStyle: { display: "none" } }}
 							/>
 							<Drawer.Screen
+								name="rented-flat"
+								options={{ drawerItemStyle: { display: "none" } }}
+							/>
+							<Drawer.Screen
 								name="+not-found"
 								options={{ drawerItemStyle: { display: "none" } }}
 							/>

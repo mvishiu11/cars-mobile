@@ -1,4 +1,4 @@
-import { exampleData } from "@/data/data";
+import { useAuthContext } from "@/context/AuthContext";
 import { FontAwesome5 } from "@expo/vector-icons";
 import {
 	DrawerContentComponentProps,
@@ -18,6 +18,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 	const isDrawerOpen = useDrawerStatus() === "open";
+	const { email } = useAuthContext();
 	return (
 		(isDrawerOpen || Platform.OS !== "android") && (
 			<SafeAreaProvider>
@@ -25,7 +26,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 					<View style={styles.container}>
 						<View style={styles.userInfo}>
 							<Text style={styles.username}>
-								{exampleData.username}
+								{email?.split("@")[0]}
 							</Text>
 						</View>
 						<DrawerItemList {...props} />

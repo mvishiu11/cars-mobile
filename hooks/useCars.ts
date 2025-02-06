@@ -31,6 +31,13 @@ export function useInfiniteRentals() {
   });
 }
 
+export function useRentals(page: number, size: number) {
+  return useQuery<RentalsResponse, Error>({
+    queryKey: ["rentals", page, size],
+    queryFn: () => getRentals(page, size),
+  });
+}
+
 /** For CARS: infinite pagination */
 export function useInfiniteCars() {
   return useInfiniteQuery<CarsResponse, Error>({
@@ -73,7 +80,9 @@ export function useCancelRental() {
     return useMutation<void, Error, string>({
       mutationFn: (id: string) => cancelRental(id),
       onSuccess: (_, id) => {
+        queryClient.invalidateQueries({ queryKey: ["carsInfinite"] });
         queryClient.invalidateQueries({ queryKey: ["rentalsInfinite"] });
+        queryClient.invalidateQueries({ queryKey: ["rentals"] });
         queryClient.invalidateQueries({ queryKey: ["rental", id] });
       }
     });
@@ -86,8 +95,9 @@ export function useRent() {
     mutationFn: ({ carId, pickupDate, returnDate }) => postRentCar(carId, pickupDate, returnDate),
     onSuccess: (_, { carId }) => {
       queryClient.invalidateQueries({ queryKey: ["carsInfinite"] });
-      queryClient.invalidateQueries({ queryKey: ["car", carId] });
       queryClient.invalidateQueries({ queryKey: ["rentalsInfinite"] });
+            queryClient.invalidateQueries({ queryKey: ["rentals"] });
+      queryClient.invalidateQueries({ queryKey: ["car", carId] });
     }
   })
 }

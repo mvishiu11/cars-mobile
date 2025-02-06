@@ -14,6 +14,7 @@ import QRCode from "react-native-qrcode-svg";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { useRentalById } from "@/hooks/useCars";
+import { useCancelRental } from "@/hooks/useCars";
 const carFallbackImage = require("../../assets/images/car-fallback.png");
 
 export default function RentedCar() {
@@ -26,6 +27,8 @@ export default function RentedCar() {
     isError,
     error,
   } = useRentalById(id as string);
+
+  const { mutate: cancelRental } = useCancelRental();
 
   if (isLoading) {
     return (
@@ -61,6 +64,7 @@ export default function RentedCar() {
           text: "Confirm",
           style: "destructive",
           onPress: async () => {
+            await cancelRental(rental.id);
             Toast.show({
               type: "success",
               text1: "Rental Canceled",
