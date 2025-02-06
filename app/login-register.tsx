@@ -37,12 +37,12 @@ export default function LoginRegisterScreen() {
 		return;
 	  }
 	  try {
-		if (activeTab) {
-		  await loginMutate(email);
-		} else {
-		  await registerMutate(email);
-		}
-		router.push("/dashboard");
+      if (activeTab) {
+        await loginMutate(email);
+        router.push("/dashboard");
+      } else {
+        await registerMutate(email);
+      }
 	  } catch (err: any) {
 		Alert.alert("Error", err.message || "An unexpected error occurred.");
 	  }

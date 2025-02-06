@@ -19,7 +19,7 @@ export function setAuthToken(token: string) {
   console.log('Token set:', authToken);
 }
 
-const DEFAULT_COORDINATES = "21.1311:52.1337"; // Warsaw
+const DEFAULT_COORDINATES = "21.1311;52.1337"; // Warsaw
 
 async function getLocationHeader() {
   try {
