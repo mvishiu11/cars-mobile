@@ -1,0 +1,4 @@
+https://expo.dev/preview/update?message=Final%20Project%20Preview%20v1.0.2&updateRuntimeVersion=1.0.0&createdAt=2025-02-06T14%3A35%3A05.024Z&slug=exp&projectId=70d67bcf-fd63-40ff-b90e-602832c82c42&group=54d02e0d-ecdc-445b-9a91-053464d2d24e
+
+if for some reason this does not work, below is an .apk build of this application:
+

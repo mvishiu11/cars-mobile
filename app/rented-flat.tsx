@@ -14,7 +14,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFlat } from "../../hooks/useFlats";
+import { useFlat } from "../hooks/useFlats";
 import { useDeleteBooking } from "@/hooks/useFlats";
 
 function openGoogleMaps(location: string) {
@@ -47,25 +47,21 @@ function FlatInfo({ flat }: { flat: any }) {
 }
 
 export default function RentedFlat() {
-  // 1) Always define your hooks at the top level
-  const { id } = useLocalSearchParams();
-  const numericId = Number(id);
+  const { flatId, bookingId } = useLocalSearchParams();
+  console.log(flatId, bookingId);
   const router = useRouter();
 
-  // Fetch the specific flat
   const {
     data: flat,
     isLoading,
     isError,
     error,
-  } = useFlat(numericId);
+  } = useFlat(Number(flatId));
 
-  // Our custom mutation hook
   const deleteBookingMutation = useDeleteBooking();
   const { mutate: deleteBooking, status } = deleteBookingMutation;
   const isDeleting = status === 'pending';
 
-  // 2) Early returns for loading/error states
   if (isLoading) {
     return (
       <SafeAreaView style={styles.centeredView}>
@@ -85,9 +81,8 @@ export default function RentedFlat() {
     );
   }
 
-  const flatFallbackImage = require("../../assets/images/flat-fallback.png");
+  const flatFallbackImage = require("../assets/images/flat-fallback.png");
 
-  // 3) Deletion logic
   const handleCancel = () => {
     Alert.alert("Confirm", `Cancel rental for ${flat.name}?`, [
       { text: "No", style: "cancel" },
@@ -95,8 +90,7 @@ export default function RentedFlat() {
         text: "Yes",
         style: "destructive",
         onPress: () => {
-          // Call our mutation
-          deleteBooking(numericId, {
+          deleteBooking(Number(bookingId), {
             onSuccess: () => {
               Toast.show({
                 type: "info",
@@ -130,7 +124,7 @@ export default function RentedFlat() {
         <Text style={styles.flatPrice}>{flat.price} zł / day</Text>
         <FlatInfo flat={flat} />
 
-        {/* "Cancel" or "Delete Booking" button */}
+        {/* Cancel button */}
         <Pressable
           style={[
             styles.cancelButton,

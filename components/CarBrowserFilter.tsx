@@ -12,6 +12,9 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import { MultipleSelectList } from "react-native-dropdown-select-list";
 import DateTimeSelector, { getNextAvailableDate } from "./DateTimeSelector";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { TextInput } from "react-native-gesture-handler";
+import { useLocations } from "@/hooks/useCars";
+import { SelectList } from "react-native-dropdown-select-list";
 
 export interface Brand {
 	key: number;
@@ -19,94 +22,86 @@ export interface Brand {
 }
 
 export interface CarBrowserFilterProps {
-	sortBy: number;
-	setSortBy: (sortBy: number) => void;
-	availableFrom: Date;
-	setAvailableFrom: (avalableFrom: Date) => void;
-	availableTo: Date;
-	setAvailableTo: (availableTo: Date) => void;
-	minPrice: number;
-	setMinPrice: (minPrice: number) => void;
-	maxPrice: number;
-	setMaxPrice: (maxPrice: number) => void;
-	searchRadius: number;
-	setSearchRadius: (searchRadius: number) => void;
+	defaultFilters: {
+		brandName: string;
+		modelName: string;
+		productionYear?: number;
+		seatCount?: number;
+		dailyRate?: number;
+		availableFrom?: string;
+		availableTo?: string;
+		city?: string;
+		distance?: number;
+	};
+	refetch: () => void;
+	setFilters: (filters: {
+		brandName: string;
+		modelName: string;
+		productionYear?: number | undefined;
+		seatCount?: number | undefined;
+		dailyRate?: number | undefined;
+		availableFrom?: string;
+		availableTo?: string;
+		city?: string;
+		distance?: number;
+	}) => void;
+	brandName: string;
+	setBrandName: (brandName: string) => void;
+    productionYear: number | undefined;
+	setProductionYear: (productionYear: number | undefined) => void;
+    seatCount: number | undefined;
+	setSeatCount: (seatCount: number | undefined) => void;
+    dailyRate: number | undefined;
+	setDailyRate: (dailyRate: number | undefined) => void;
+	availableFrom: string;
+	setAvailableFrom: (avalableFrom: string | undefined) => void;
+	availableTo: string;
+	setAvailableTo: (availableTo: string | undefined) => void;
+	city: string | undefined;
+	setCity: (city: string | undefined) => void;
+	distance: number | undefined;
+	setDistance: (distance: number | undefined) => void;
 }
 
 const CarBrowserFilter = ({
-	sortBy,
-	setSortBy,
+	defaultFilters,
+	setFilters,
+	brandName,
+	setBrandName,
+	productionYear,
+	setProductionYear,
+	seatCount,
+	setSeatCount,
+	dailyRate,
+	setDailyRate,
 	availableFrom,
 	setAvailableFrom,
 	availableTo,
 	setAvailableTo,
-	minPrice,
-	setMinPrice,
-	maxPrice,
-	setMaxPrice,
-	searchRadius,
-	setSearchRadius,
+	city,
+	setCity,
+	distance,
+	setDistance,
 }: CarBrowserFilterProps) => {
-	const sortCategories = ["Newest ☆", "Popularity ♡", "Price ⭣", "Price ⭡"];
 	const [isFromDateModalOpen, setIsFromDateModalOpen] = useState(false);
 	const [isFromTimeModalOpen, setIsFromTimeModalOpen] = useState(false);
 	const [isToDateModalOpen, setIsToDateModalOpen] = useState(false);
 	const [isToTimeModalOpen, setIsToTimeModalOpen] = useState(false);
 	const [scrollEnabled, setScrollEnabled] = useState(true);
-	const brands: Brand[] = [
-		{ key: 1, value: "Audi" },
-		{ key: 2, value: "BMW" },
-		{ key: 3, value: "Mercedes" },
-		{ key: 4, value: "Acura" },
-		{ key: 5, value: "Alfa Romeo" },
-		{ key: 6, value: "Aston Martin" },
-		{ key: 7, value: "Bentley" },
-		{ key: 8, value: "Bugatti" },
-		{ key: 9, value: "Cadillac" },
-		{ key: 10, value: "Chevrolet" },
-		{ key: 11, value: "Chrysler" },
-		{ key: 12, value: "Dodge" },
-		{ key: 13, value: "Ferrari" },
-		{ key: 14, value: "Fiat" },
-		{ key: 15, value: "Ford" },
-		{ key: 16, value: "Honda" },
-		{ key: 17, value: "Hyundai" },
-		{ key: 18, value: "Jaguar" },
-		{ key: 19, value: "Jeep" },
-		{ key: 20, value: "Kia" },
-		{ key: 21, value: "Lamborghini" },
-		{ key: 22, value: "Land Rover" },
-		{ key: 23, value: "Lexus" },
-		{ key: 24, value: "Maserati" },
-		{ key: 25, value: "Mazda" },
-		{ key: 26, value: "McLaren" },
-		{ key: 27, value: "Nissan" },
-		{ key: 28, value: "Porsche" },
-		{ key: 29, value: "Rolls-Royce" },
-		{ key: 30, value: "Subaru" },
-		{ key: 31, value: "Tesla" },
-		{ key: 32, value: "Toyota" },
-		{ key: 33, value: "Volkswagen" },
-		{ key: 34, value: "Volvo" },
-	].sort((a, b) => a.value.localeCompare(b.value));
-
-	const [selectedBrands, setSelectedBrands] = useState<Brand[]>([]);
 	const ref = useRef<ScrollView | null>(null);
-	const [isSelectDropdownOpen, setIsSelectDropdownOpen] = useState(false);
 
-	const [clear, setClear] = useState(false);
+	const locations = useLocations();
+	const cities = [...new Set(locations.data?.map((location) => location.city) ?? [])];
 
 	const clearFilters = () => {
-		const nextAvailableDate = getNextAvailableDate();
-		setClear(true);
-		setSortBy(0);
-		setAvailableFrom(nextAvailableDate);
-		setAvailableTo(nextAvailableDate);
-		setMinPrice(300);
-		setMaxPrice(700);
-		setSearchRadius(2500);
-		setSelectedBrands([]);
-		setTimeout(() => setClear(false), 1);
+		setBrandName(defaultFilters.brandName);
+		setProductionYear(defaultFilters.productionYear);
+		setSeatCount(defaultFilters.seatCount);
+		setDailyRate(defaultFilters.dailyRate);
+		setAvailableFrom(defaultFilters.availableFrom);
+		setAvailableTo(defaultFilters.availableTo);
+		setCity(defaultFilters.city);
+		setFilters(defaultFilters);
 	};
 
 	return (
@@ -131,25 +126,30 @@ const CarBrowserFilter = ({
 				contentInsetAdjustmentBehavior="automatic"
 				automaticallyAdjustKeyboardInsets={true}
 			>
-				<Text style={styles.header}>Sort by</Text>
-				<SegmentedControl
-					values={sortCategories}
-					appearance="light"
-					tintColor="#044eeb"
-					fontStyle={{ color: "#00246B" }}
-					activeFontStyle={{ color: "#fff" }}
-					selectedIndex={sortBy}
-					onChange={(e) =>
-						setSortBy(e.nativeEvent.selectedSegmentIndex)
-					}
-				/>
+				{/* Brand Name Input */}
+				<View style={styles.inputContainer}>
+					<Text style={styles.header}>Brand</Text>
+					<View style={styles.inputWrapper}>
+						<FontAwesome5 name="car" size={16} color="#00246B" />
+						<TextInput
+						style={styles.input}
+						placeholder="Enter brand (e.g., Tesla)"
+						value={brandName}
+						onChangeText={setBrandName}
+						/>
+					</View>
+				</View>
+
+				{/* Availability */}
 				<Text style={styles.header}>Availability</Text>
 				<Text style={styles.h2}>From</Text>
 				<DateTimeSelector
-					dateTime={availableFrom}
+					dateTime={new Date(availableFrom)}
 					setDateTime={(date) => {
-						setAvailableFrom(date);
-						setAvailableTo(date);
+						setAvailableFrom(date.toISOString());
+						if (new Date(availableTo) < date) {
+							setAvailableTo(date.toISOString());
+						}
 					}}
 					isDateModalOpen={isFromDateModalOpen}
 					setDateModalOpen={setIsFromDateModalOpen}
@@ -158,46 +158,32 @@ const CarBrowserFilter = ({
 				/>
 				<Text style={styles.h2}>To</Text>
 				<DateTimeSelector
-					dateTime={availableTo}
-					setDateTime={setAvailableTo}
+					dateTime={new Date(availableTo)}
+					setDateTime={(date) => {
+						setAvailableTo(date.toISOString());
+					}}
 					isDateModalOpen={isToDateModalOpen}
 					setDateModalOpen={setIsToDateModalOpen}
 					isTimeModalOpen={isToTimeModalOpen}
 					setTimeModalOpen={setIsToTimeModalOpen}
 				/>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						justifyContent: "space-between",
-					}}
-				>
-					<Text style={styles.header}>Price range</Text>
-					<Text
-						style={styles.h2}
-					>{`${minPrice} zł - ${maxPrice} zł`}</Text>
-				</View>
-				<View style={{ alignItems: "center" }}>
-					<MultiSlider
-						min={0}
-						max={1000}
-						step={10}
-						values={[minPrice, maxPrice]}
-						onValuesChange={(values) => {
-							setMinPrice(values[0]);
-							setMaxPrice(values[1]);
-						}}
-						trackStyle={{ backgroundColor: "#00246B" }}
-						selectedStyle={{ backgroundColor: "#044eeb" }}
-						onValuesChangeStart={() => setScrollEnabled(false)}
-						onValuesChangeFinish={() => setScrollEnabled(true)}
-						markerStyle={
-							Platform.OS === "android"
-								? { backgroundColor: "#00246B" }
-								: undefined
-						}
-					/>
-				</View>
+
+				{/* City */}
+				<Text style={styles.header}>City</Text>
+				<SelectList
+					data={cities}
+					setSelected={(val: string) => setCity(val)}
+					placeholder="Select city"
+					searchPlaceholder="Search cities"
+					arrowicon={<FontAwesome5 name="chevron-down" size={16} color="#00246B" />}
+					searchicon={<FontAwesome5 name="search" size={16} color="#00246B" />}
+					closeicon={<FontAwesome5 name="times" size={16} color="#00246B" />}
+					boxStyles={{ borderColor: "#00246B" }}
+					inputStyles={{ color: "#888" }}
+					dropdownStyles={{ borderColor: "#00246B" }}
+				/>
+
+				
 				<View
 					style={{
 						flexDirection: "row",
@@ -206,16 +192,16 @@ const CarBrowserFilter = ({
 					}}
 				>
 					<Text style={styles.header}>Search radius</Text>
-					<Text style={styles.h2}>{`${searchRadius / 1000} km`}</Text>
+					<Text style={styles.h2}>{`${(distance ?? 10000) / 1000} km`}</Text>
 				</View>
 				<View style={{ alignItems: "center" }}>
 					<MultiSlider
 						min={100}
 						max={10000}
 						step={100}
-						values={[searchRadius]}
+						values={[distance ?? 10000]}
 						onValuesChange={(values) => {
-							setSearchRadius(values[0]);
+							setDistance(values[0]);
 						}}
 						trackStyle={{ backgroundColor: "#00246B" }}
 						selectedStyle={{ backgroundColor: "#044eeb" }}
@@ -228,39 +214,97 @@ const CarBrowserFilter = ({
 						}
 					/>
 				</View>
-				<Text style={styles.header}>Brand</Text>
-				<MultipleSelectList
-					data={brands}
-					save="value"
-					label="Selected Brands"
-					setSelected={setSelectedBrands}
-					arrowicon={
-						<FontAwesome5
-							name="chevron-down"
-							size={16}
-							color="#00246B"
-						/>
-					}
-					searchicon={
-						<FontAwesome5 name="search" size={16} color="#00246B" />
-					}
-					closeicon={
-						<FontAwesome5 name="times" size={16} color="#00246B" />
-					}
-					checkicon={
-						<FontAwesome5 name="check" size={10} color="#fff" />
-					}
-					searchPlaceholder="Search brands"
-					notFoundText="No brands found"
-					boxStyles={{ borderColor: "#00246B" }}
-					placeholder="Select brands"
-					inputStyles={{ color: "#888" }}
-					labelStyles={{ color: "#00246B" }}
-					badgeStyles={{ backgroundColor: "#044eeb" }}
-					dropdownStyles={{ borderColor: "#00246B" }}
-					onShow={() => ref.current?.scrollToEnd({ animated: true })}
-					clear={clear}
-				/>
+
+				{/* Production Year */}
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+					}}
+				>
+					<Text style={styles.header}>Production Year</Text>
+					<Text style={styles.h2}>{`${productionYear}`}</Text>
+				</View>
+				<View style={{ alignItems: "center" }}>
+					<MultiSlider
+						min={2001}
+						max={2022}
+						step={1}
+						values={[productionYear ?? 2001]}
+						onValuesChange={(values) => {
+							setProductionYear(values[0]);
+						}}
+						trackStyle={{ backgroundColor: "#00246B" }}
+						selectedStyle={{ backgroundColor: "#044eeb" }}
+						onValuesChangeStart={() => setScrollEnabled(false)}
+						onValuesChangeFinish={() => setScrollEnabled(true)}
+						markerStyle={
+							Platform.OS === "android"
+								? { backgroundColor: "#00246B" }
+								: undefined
+						}
+					/>
+				</View>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+					}}>
+					<Text style={styles.header}>Seat Count</Text>
+					<Text style={styles.h2}>{`${seatCount}`}</Text>
+				</View>
+				<View style={{ alignItems: "center" }}>
+					<MultiSlider
+						min={1}
+						max={10}
+						step={1}
+						values={[seatCount ?? 4]}
+						onValuesChange={(values) => {
+							setSeatCount(values[0]);
+						}}
+						trackStyle={{ backgroundColor: "#00246B" }}
+						selectedStyle={{ backgroundColor: "#044eeb" }}
+						onValuesChangeStart={() => setScrollEnabled(false)}
+						onValuesChangeFinish={() => setScrollEnabled(true)}
+						markerStyle={
+							Platform.OS === "android"
+								? { backgroundColor: "#00246B" }
+								: undefined
+						}
+					/>
+				</View>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+					}}
+				>
+					<Text style={styles.header}>Maximum Daily Rate</Text>
+					<Text style={styles.h2}>{`${dailyRate} zł`}</Text>
+				</View>
+				<View style={{ alignItems: "center" }}>
+					<MultiSlider
+						min={0}
+						max={3000}
+						step={100}
+						values={[0, dailyRate ?? 300]}
+						onValuesChange={(values) => {
+							setDailyRate(values[1]);
+						}}
+						trackStyle={{ backgroundColor: "#00246B" }}
+						selectedStyle={{ backgroundColor: "#044eeb" }}
+						onValuesChangeStart={() => setScrollEnabled(false)}
+						onValuesChangeFinish={() => setScrollEnabled(true)}
+						markerStyle={
+							Platform.OS === "android"
+								? { backgroundColor: "#00246B" }
+								: undefined
+						}
+					/>
+				</View>
 			</ScrollView>
 		</View>
 	);
@@ -281,15 +325,6 @@ const styles = StyleSheet.create({
 		color: "#044eeb",
 	},
 	carList: {},
-	input: {
-		flex: 1,
-		borderWidth: 1,
-		borderColor: "#ddd",
-		borderRadius: 8,
-		padding: 12,
-		marginBottom: 16,
-		backgroundColor: "#fff",
-	},
 	card: {
 		flexDirection: "row",
 		backgroundColor: "#fff",
@@ -314,4 +349,30 @@ const styles = StyleSheet.create({
 		gap: 8,
 	},
 	priceText: { fontWeight: "bold", color: "#00246B" },
+	inputContainer: {
+		marginBottom: 16,
+	  },
+	  inputWrapper: {
+		flexDirection: "row",
+		alignItems: "center",
+		backgroundColor: "#fff",
+		borderWidth: 1,
+		borderColor: "#ddd",
+		borderRadius: 8,
+		paddingHorizontal: 12,
+		height: 42,
+	  },
+	  input: {
+		flex: 1,
+		marginLeft: 8,
+		paddingVertical: 8,
+		fontSize: 16,
+		color: "#333",
+	  },
+	  label: {
+		fontSize: 18,
+		fontWeight: "600",
+		color: "#00246B",
+		marginBottom: 8,
+	  },
 });
