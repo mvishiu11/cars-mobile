@@ -1,5 +1,5 @@
 import apiClient from "../api/apiClient";
-import { Car, Rental } from "../types";
+import { Car, Rental, LocationData } from "../types";
 
 /**
  * Pagination shape from the backend
@@ -50,15 +50,34 @@ export async function cancelRental(id: string): Promise<void> {
 }
 
 /**
- * Fetches a page of cars from the backend
+ * Fetches a page of cars from the backend with filters
  */
-export async function getCars(page = 0, size = 10): Promise<CarsResponse> {
-    const response = await apiClient.get<CarsResponse>("/cars/", {
-      params: { 
-        page: page, 
-        size: size },
-    });
-    return response.data;
+export async function getCars(
+  page = 0,
+  size = 10,
+  filters: {
+    brandName?: string;
+    modelName?: string;
+    productionYear?: number;
+    fuelType?: string;
+    fuelCapacity?: number;
+    seatCount?: number;
+    doorCount?: number;
+    dailyRate?: number;
+    from?: string;
+    to?: string;
+    distance? : number;
+    city? : string;
+  } = {}
+): Promise<CarsResponse> {
+  const response = await apiClient.get<CarsResponse>("/cars/", {
+    params: {
+      page,
+      size,
+      ...filters,
+    },
+  });
+  return response.data;
 }
 
 /**
@@ -78,5 +97,10 @@ export async function postRentCar(carId: string, startAt: string, endAt: string)
         startAt,
         endAt,
     });
+    return response.data;
+}
+
+export async function getLocations(): Promise<LocationData[]> {
+    const response = await apiClient.get("/locations/");
     return response.data;
 }

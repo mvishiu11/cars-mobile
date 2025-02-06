@@ -8,9 +8,10 @@ import { getRentals,
          postRentCar,
          getCars, 
          getCarById,
+         getLocations,
          RentalsResponse, 
          CarsResponse } from "../services/carsService";
-import { Car, Rental } from "../types";
+import { Car, Rental, LocationData } from "../types";
 
 /** For RENTALS: infinite pagination */
 export function useInfiniteRentals() {
@@ -38,13 +39,26 @@ export function useRentals(page: number, size: number) {
   });
 }
 
-/** For CARS: infinite pagination */
-export function useInfiniteCars() {
+/** For CARS: infinite pagination with filters */
+export function useInfiniteCars(filters: {
+  brandName?: string;
+  modelName?: string;
+  productionYear?: number;
+  fuelType?: string;
+  fuelCapacity?: number;
+  seatCount?: number;
+  doorCount?: number;
+  dailyRate?: number;
+  from?: string;
+  to?: string;
+  distance? : number;
+  city? : string;
+} = {}) {
   return useInfiniteQuery<CarsResponse, Error>({
-    queryKey: ["carsInfinite"],
+    queryKey: ["carsInfinite", filters],
     initialPageParam: 0,
     queryFn: async ({ pageParam = 0 }) => {
-      return getCars(pageParam as number, 10);
+      return getCars(pageParam as number, 10, filters);
     },
     getNextPageParam: (lastPage) => {
       const currentPageNumber = lastPage.page.number;
@@ -100,4 +114,11 @@ export function useRent() {
       queryClient.invalidateQueries({ queryKey: ["car", carId] });
     }
   })
+}
+
+export function useLocations() {
+  return useQuery<LocationData[], Error>({
+    queryKey: ["locations"],
+    queryFn: getLocations
+  });
 }

@@ -39,6 +39,7 @@ export interface CarModel {
     id: string;
     fullAddress: string;
     latitude: number;
+    city: string;
     longitude: number;
   }
   

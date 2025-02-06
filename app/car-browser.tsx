@@ -19,43 +19,54 @@ import { Car } from "@/types";
 
 export default function CarBrowser() {
   const router = useRouter();
-  const nextAvailableDate = getNextAvailableDate();
-
+  
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [sortBy, setSortBy] = useState(0);
-  const [availableFrom, setAvailableFrom] = useState(nextAvailableDate);
-  const [availableTo, setAvailableTo] = useState(nextAvailableDate);
-  const [minPrice, setMinPrice] = useState(300);
-  const [maxPrice, setMaxPrice] = useState(700);
-  const [searchRadius, setSearchRadius] = useState(2500);
+  const [productionYear, setProductionYear] = useState<number | undefined>();
+  const [seatCount, setSeatCount] = useState<number | undefined>();
+  const [dailyRate, setDailyRate] = useState<number | undefined>();
+  const [brandName, setBrandName] = useState<string | undefined>();
+  const [availableFrom, setAvailableFrom] = useState<string | undefined>();
+  const [availableTo, setAvailableTo] = useState<string | undefined>();
+  const [city, setCity] = useState<string | undefined>();
+  const [distance, setDistance] = useState<number | undefined>();
 
   const carFallbackImage = require("../assets/images/car-fallback.png");
 
-  const filters = {
-    sortBy,
-    availableFrom,
-    availableTo,
-    minPrice,
-    maxPrice,
-    searchRadius,
+  const defaultFilters: {
+    brandName: string;
+    modelName: string;
+    productionYear?: number;
+    seatCount?: number;
+    dailyRate?: number;
+    from?: string;
+    to?: string;
+    city?: string;
+    distance?: number;
+  } = {
+    brandName: "",
+    modelName: "",
+    productionYear: undefined,
+    seatCount: undefined,
+    dailyRate: undefined,
+    from: undefined,
+    to: undefined,
+    city: undefined,
+    distance: undefined,
   };
-  const sortCategories = ["Newest ☆", "Popularity ♡", "Price ⭣", "Price ⭡"];
-  const defaultFilters = {
-    sortBy: 0,
-    availableFrom: nextAvailableDate,
-    availableTo: nextAvailableDate,
-    minPrice: 300,
-    maxPrice: 700,
-    searchRadius: 2500,
-  };
+  const [filters, setFilters] = useState(defaultFilters);
 
+  const cleanedFilters = Object.fromEntries(
+    Object.entries(filters).filter(([_, v]) => v !== undefined)
+  );
+  
   const {
     data: carsData,
     isLoading,
     isError,
     error,
-  } = useInfiniteCars();
+    refetch
+  } = useInfiniteCars(cleanedFilters);  
 
   const cars = carsData?.pages.flatMap((page) => page.content) ?? [];
 
@@ -130,22 +141,18 @@ export default function CarBrowser() {
           style={styles.searchButton}
           onPress={() => {
             if (query.length > 2 || filters !== defaultFilters) {
-              alert(
-                `Searching for \"${query}\" with filters\n` +
-                  `Sort by: ${sortCategories[filters.sortBy]}\n` +
-                  `From: ${new Intl.DateTimeFormat("pl-PL", {
-                    dateStyle: "short",
-                    timeStyle: "short",
-                    timeZone: "Europe/Warsaw",
-                  }).format(filters.availableFrom)}\n` +
-                  `To: ${new Intl.DateTimeFormat("pl-PL", {
-                    dateStyle: "short",
-                    timeStyle: "short",
-                    timeZone: "Europe/Warsaw",
-                  }).format(filters.availableTo)}\n` +
-                  `Price: ${filters.minPrice} zł - ${filters.maxPrice} zł\n` +
-                  `Radius: ${filters.searchRadius / 1000} km`
-              );
+              setFilters({
+                ...filters,
+                modelName: query,
+                ...(brandName !== undefined && { brandName: brandName }),
+                ...(seatCount !== undefined && { seatCount: seatCount }),
+                ...(productionYear !== undefined && { productionYear: productionYear }),
+                ...(dailyRate !== undefined && { dailyRate: dailyRate }),
+                ...(availableFrom !== undefined && { from: availableFrom }),
+                ...(availableTo !== undefined && { to: availableTo }),
+                ...(city !== undefined && { city: city }),
+                ...(distance !== undefined && { distance: distance }),
+              });
             }
           }}
         >
@@ -165,18 +172,25 @@ export default function CarBrowser() {
 
       {isFilterOpen ? (
         <CarBrowserFilter
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-          availableFrom={availableFrom}
+          defaultFilters={defaultFilters}
+          refetch={refetch}
+          setFilters={setFilters}
+          brandName={brandName ?? ""}
+          setBrandName={setBrandName}
+          productionYear={productionYear ?? 2001}
+          setProductionYear={setProductionYear}
+          seatCount={seatCount ?? 4}
+          setSeatCount={setSeatCount}
+          dailyRate={dailyRate ?? 300}
+          setDailyRate={setDailyRate}
+          availableFrom={availableFrom ?? getNextAvailableDate().toISOString()}
           setAvailableFrom={setAvailableFrom}
-          availableTo={availableTo}
+          availableTo={availableTo ?? getNextAvailableDate().toISOString()}
           setAvailableTo={setAvailableTo}
-          minPrice={minPrice}
-          setMinPrice={setMinPrice}
-          maxPrice={maxPrice}
-          setMaxPrice={setMaxPrice}
-          searchRadius={searchRadius}
-          setSearchRadius={setSearchRadius}
+          city={city}
+          setCity={setCity}
+          distance={distance}
+          setDistance={setDistance}
         />
       ) : (
         <FlatList
